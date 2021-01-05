@@ -95,7 +95,7 @@ log ""
 if user_exists "$TOOLS_USER"; code=$?; then
     log "yes the user exists"
 else
-    log "No, the user does not exist"
+    log "No, the user does not exist" >&2  # error messages should go to stderr
 fi
 
 exit 0
