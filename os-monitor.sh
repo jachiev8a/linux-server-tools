@@ -36,6 +36,12 @@ handle_error() {
     exit 1
 }
 
+# user existance
+# ----------------------------------------------------------------------
+user_exists(){
+    id "$1" &>/dev/null;
+} # silent, it just sets the exit code
+
 # run script as root
 # ----------------------------------------------------------------------
 if [ "$EUID" -ne 0 ] ; then
@@ -86,9 +92,7 @@ log ""
 log " > [$TOOL_NAME]: Validating Tools User '$TOOLS_USER'..."
 log ""
 
-USER_EXISTS_RES=$(grep -c "^$TOOLS_USER" /etc/passwd)
-
-if [ $USER_EXISTS_RES -eq 0 ]; then
+if user_exists "$TOOLS_USER"; code=$?; then
     log "yes the user exists"
 else
     log "No, the user does not exist"
