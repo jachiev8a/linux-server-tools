@@ -81,7 +81,7 @@ fi
 log_info " > [$TOOL_NAME]: Directory Structure Successfully created [OK]"
 log ""
 
-# directory permissions (if not exists)
+# user and directory permissions (if not exists)
 # ----------------------------------------------------------------------
 log " > [$TOOL_NAME]: Validating Tools User '$TOOLS_USER'..."
 log ""
@@ -89,11 +89,16 @@ log ""
 USER_EXISTS_RES=$(grep -c "^$TOOLS_USER:" /etc/passwd)
 
 if [ $USER_EXISTS_RES -eq 0 ]; then
-    handle_error "Expected User '$TOOLS_USER' does not exist. Please create it."
+    handle_error "User '$TOOLS_USER' does not exist. Please create it."
 else
     log_info " > [$TOOL_NAME]: User '$TOOLS_USER' exists [OK]"
     log ""
 fi
+
+log " > [$TOOL_NAME]: Changing permissions to user '$TOOLS_USER' in '$TOOLS_ROOT_DIR'"
+log ""
+
+chown -R $TOOLS_USER:$TOOLS_USER $TOOLS_ROOT_DIR
 
 exit 0
 
