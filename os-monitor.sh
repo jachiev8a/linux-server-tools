@@ -7,7 +7,7 @@ source logging_utils.sh
 # Script definitions
 # ----------------------------------------------------------------------
 
-TOOL_NAME="OS-Monitor"
+TOOL_NAME="os-monitor"
 TOOLS_USER="servertool"
 
 TOOLS_ROOT_DIR=/opt/linux-server-tools
@@ -99,6 +99,16 @@ log " > [$TOOL_NAME]: Changing permissions to user '$TOOLS_USER' in '$TOOLS_ROOT
 log ""
 
 chown -R $TOOLS_USER:$TOOLS_USER $TOOLS_ROOT_DIR
+
+# get os metadata
+# ----------------------------------------------------------------------
+log " > [$TOOL_NAME]: Getting disk space..."
+log ""
+
+DATE_FORMAT=$(date +"%m-%d-%Y__%H-%M-%S__%b-%d-%Y__%Z")
+FILE_NAME="$TOOL_NAME__disk__$DATE_FORMAT.txt"
+
+df -h | grep /dev/s > $OS_MONITOR_OUT_DIR/$FILE_NAME
 
 exit 0
 
