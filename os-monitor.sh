@@ -69,13 +69,6 @@ else
     log ""
 fi
 
-# run scripts as other user
-# ----------------------------------------------------------------------
-log " > [$TOOL_NAME]: Run as Tools user '$TOOLS_USER'..."
-log ""
-
-su - $TOOLS_USER
-
 # create directory structure (if not exists)
 # ----------------------------------------------------------------------
 log " > [$TOOL_NAME]: Validating Directory Structure..."
@@ -85,19 +78,19 @@ log ""
 # root dir
 if [ ! -d $TOOLS_ROOT_DIR ] ; then
     log_debug " > [$TOOL_NAME]: Creating main tools directory: $TOOLS_ROOT_DIR"
-    mkdir $TOOLS_ROOT_DIR
+    sudo -u $TOOLS_USER mkdir $TOOLS_ROOT_DIR
 fi
 
 # tool dir
 if [ ! -d $OS_MONITOR_DIR ] ; then
     log_debug " > [$TOOL_NAME]: Creating tool directory: $OS_MONITOR_DIR"
-    mkdir $OS_MONITOR_DIR
+    sudo -u $TOOLS_USER mkdir $OS_MONITOR_DIR
 fi
 
 # tool output dir
 if [ ! -d $OS_MONITOR_OUT_DIR ] ; then
     log_debug " > [$TOOL_NAME]: Creating tool output directory: $OS_MONITOR_OUT_DIR"
-    mkdir $OS_MONITOR_OUT_DIR
+    sudo -u $TOOLS_USER sudo -u $TOOLS_USER mkdir $OS_MONITOR_OUT_DIR
 fi
 
 log_info " > [$TOOL_NAME]: Directory Structure Successfully created [OK]"
