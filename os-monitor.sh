@@ -164,7 +164,7 @@ cat $OS_MONITOR_OUT_DIR/$FILE_NAME_DISK | while read line
 do
     # go trough all drives found inside the disk file
     CURRENT_DRIVE=$(echo $line | awk -F " " '{printf("%s", $1)}')
-    CURRENT_DRIVE_VALUES=$(echo $line | awk -F " " '{printf("%s,%s,%s,%s,%s", $1,$2,$3,$4,$5)}')
+    CURRENT_DRIVE_VALUES=$(echo $line | awk -F " " '{printf("%s,%s,%s,%s,%s,%s", $1,$2,$3,$4,$5,$6)}')
     DRIVE_ID=$(echo $CURRENT_DRIVE | awk -F "/" '{printf("%s-%s", $2, $3)}')
 
     DRIVE_CSV_FILE_NAME="_$DRIVE_ID.csv"
