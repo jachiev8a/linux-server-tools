@@ -14,6 +14,12 @@ TOOLS_ROOT_DIR=/opt/linux-server-tools
 OS_MONITOR_DIR=$TOOLS_ROOT_DIR/os-monitor
 OS_MONITOR_OUT_DIR=$OS_MONITOR_DIR/out
 
+OS_MONITOR_MEM_CSV_FILE=$OS_MONITOR_OUT_DIR/_mem-info.csv
+
+DISK_CSV_TITLES="Drive,Total,Used,Available,Use,Mount,Date,Time"
+
+CLEAN_OUTPUT=false
+
 # usage help use
 # ----------------------------------------------------------------------
 usage() {
@@ -45,10 +51,9 @@ fi
 
 # validate arguments parsing
 # ----------------------------------------------------------------------
-while getopts "hdi" option; do
+while getopts "hc" option; do
     case "$option" in
-        d) USE_DEFAULT_REPO_PATH=true ;;
-        i) USE_DEFAULT_SSH_FILE=true ;;
+        c) CLEAN_OUTPUT=true ;;
         h) usage ;;
         *) usage ;;
     esac
@@ -96,20 +101,42 @@ fi
 log_info " > [$TOOL_NAME]: Directory Structure Successfully created [OK]"
 log ""
 
+# check if cleaning output directory
+# ----------------------------------------------------------------------
+if [ "$CLEAN_OUTPUT" = true ]; then
+    log_warning " --------------------------------------------"
+    log_warning " > [$TOOL_NAME]: Clean Output selected!"
+    log_warning " > DIR: $OS_MONITOR_OUT_DIR"
+    log_warning " --------------------------------------------"
+    read -p "Are you sure you want to continue? [Y/y]" -n 1 -r
+    echo    # (optional) move to a new line
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        rm -rf $OS_MONITOR_OUT_DIR/*
+    else
+        log "Skipping Clean Output..."
+        log ""
+    fi
+fi
+
+# date time data
+# ----------------------------------------------------------------------
+xTIME=$(date +"%H-%M-%S")
+xDATE=$(date +"%m-%d-%Y")
+xDATE_SUMMARY=$(date +"%b-%d-%Y__%Z")
+DATE_FORMAT="$xTIME""__$xDATE""$__$xDATE_SUMMARY"
+
 # get os metadata
 # ----------------------------------------------------------------------
-DATE_FORMAT=$(date +"%m-%d-%Y__%H-%M-%S__%b-%d-%Y__%Z")
 
 log " > [$TOOL_NAME]: Getting Disk Space info..."
 log "------------------------------------------------------------"
 
 FILE_NAME_DISK="$TOOL_NAME""__disk__""$DATE_FORMAT.txt"
 
-df -h | grep /dev/s > $OS_MONITOR_OUT_DIR/$FILE_NAME_DISK
+df -h | grep "^/dev/s" > $OS_MONITOR_OUT_DIR/$FILE_NAME_DISK
 
 log_fine " > [$TOOL_NAME]: disk space info to file: '$FILE_NAME_DISK'..."
 log ""
-
 log " > [$TOOL_NAME]: Getting Memory info..."
 log "------------------------------------------------------------"
 
@@ -119,9 +146,33 @@ free -ht > $OS_MONITOR_OUT_DIR/$FILE_NAME_MEM
 
 log_fine " > [$TOOL_NAME]: memory info to file: '$FILE_NAME_MEM'..."
 log ""
-
 log_info " > [$TOOL_NAME]: OS Metadata successfully retrieved! [OK]"
 log ""
+
+# start CSV Generation
+# ----------------------------------------------------------------------
+log " > [$TOOL_NAME]: Starting CSV Generation..."
+log "------------------------------------------------------------"
+
+cat $FILE_NAME_DISK | while read line
+do
+    # go trough all drives found inside the disk file
+    CURRENT_DRIVE=$(echo $line | awk -F " " '{printf("%s", $1)}')
+    CURRENT_DRIVE_VALUES=$(echo $line | awk -F " " '{printf("%s,%s,%s,%s,%s", $1,$2,$3,$4,$5)}')
+    DRIVE_ID=$(echo $CURRENT_DRIVE | awk -F "/" '{printf("%s-%s", $2, $3)}')
+
+    DRIVE_CSV_FILE_NAME="_$DRIVE_ID.csv"
+    
+    if [[ ! -f "$DRIVE_CSV_FILE_NAME" ]]; then
+        # csv file does not exists. generate it.
+        echo " > [$TOOL_NAME]: Generating '$DRIVE_CSV_FILE_NAME'..."
+        echo $DISK_CSV_TITLES >> $DRIVE_CSV_FILE_NAME
+    fi
+    DRIVE_CSV_VALUES="$CURRENT_DRIVE_VALUES,$xDATE,$xTIME"
+    log " > Writing values to CSV file: '$DRIVE_CSV_FILE_NAME'"
+    echo $DRIVE_CSV_VALUES >> $DRIVE_CSV_FILE_NAME
+done
+
 
 # change directory permissions
 # ----------------------------------------------------------------------
@@ -130,116 +181,8 @@ log "------------------------------------------------------------"
 
 chown -R $TOOLS_USER:$TOOLS_USER $TOOLS_ROOT_DIR
 
-exit 0
-
-
-
-
-
-
-
-
-
-
-
-
-echo " > [DOCKER]: Running Docker App as user: '$(whoami)'"
-
-# create logs folder (if not exists)
-# ----------------------------------------------------------------------
-if [ ! -d "./logs" ] ; then
-    echo " > [DOCKER]: Creating logs folder..."
-    mkdir logs
-fi
-
-# Validate repo path argument
-# ----------------------------------------------------------------------
-if [ "$USE_DEFAULT_REPO_PATH" = true ] ; then
-    echo -e " > [DOCKER]: Using Default repo path: '$DEFAULT_REPO_PATH'\n"
-    REPO_PATH_TO_DEPLOY=$DEFAULT_REPO_PATH
-else
-    echo -e " > [DOCKER]: Setting up Repo Path...\n"
-    read -r -p " > Enter the Repo Path Value: " input_repo_path
-
-    # validate that repo path exists
-    if [ ! -d "$input_repo_path" ] ; then
-        handle_error "Given Repo Path does not exists! -> '$input_repo_path'"
-    else
-        echo -e ""
-        echo -e " > [DOCKER]: Valid Repo Path Value -> '$input_repo_path'"
-        log_info " > [DOCKER]: [OK]\n"
-    fi
-    REPO_PATH_TO_DEPLOY="$input_repo_path"
-fi
-
-# Validate ssh argument
-# ----------------------------------------------------------------------
-if [ "$USE_DEFAULT_SSH_FILE" = true ] ; then
-    echo -e " > [DOCKER]: Using Default SSH id_rsa: '$DEFAULT_SSH_FILE'\n"
-    GIT_SSH_FILE=$DEFAULT_SSH_FILE
-else
-    echo -e " > [DOCKER]: Setting up SSH id_rsa...\n"
-    read -r -p " > Enter the SSH id_rsa Path Value: " input_ssh_path
-
-    # validate that ssh path exists
-    if [ ! -f "$input_ssh_path" ] ; then
-        handle_error "Given SSH id_rsa Path does not exists! -> '$input_ssh_path'"
-    else
-        echo -e ""
-        echo -e " > [DOCKER]: Valid SSH id_rsa Value -> '$input_ssh_path'"
-        log_info " > [DOCKER]: [OK]\n"
-    fi
-    GIT_SSH_FILE="$input_ssh_path"
-fi
-
-# Validate ssh argument
-# ----------------------------------------------------------------------
-current_working_dir=$(pwd)
-this_root_ssh_file="$current_working_dir/$DEFAULT_SSH_FILE_ID"
-
-# validate that ssh path exists
-# ----------------------------------------------------------------------
-log_debug " > [DOCKER]: Validate SSH $DEFAULT_SSH_FILE_ID is located in root..."
-echo -e " > SSH File -> '$this_root_ssh_file'"
-if [ ! -f "$this_root_ssh_file" ] ; then
-
-    echo -e " > [DOCKER]: SSH $DEFAULT_SSH_FILE_ID not located in root."
-    echo -e " > [DOCKER]: start copying file from source..."
-    echo -e " > Source File: '$GIT_SSH_FILE'"
-    echo -e " > Destination: '$current_working_dir'"
-    echo -e ""
-
-    # copy ssh key to root in order to be used by docker
-    cp "$GIT_SSH_FILE" "$current_working_dir"
-    log_info " > [DOCKER]: Successfully Copied [OK]"
-else
-    echo -e " > [DOCKER]: SSH $DEFAULT_SSH_FILE_ID already located in root."
-    log_info " > [DOCKER]: Nothing to do! [OK]\n"
-fi
-echo -e " ------------------------------------------------------------"
-
-# set the repo path variable use at docker-compose file.
-export REPO_TO_DEPLOY="$REPO_PATH_TO_DEPLOY"
-
-log_debug " > [DOCKER]: Executing docker-compose Process...\n"
-
-echo -e " > [DOCKER]: Stop all running containers..."
-docker-compose -f docker-compose.yml down
-log_info " > [DOCKER]: Containers Stopped [OK]\n"
-echo -e " ------------------------------------------------------------"
-
-echo -e " > [DOCKER]: Starting containers..."
-docker-compose -f docker-compose.yml up --build -d
-docker_exit_status=$?
-
-if [ $docker_exit_status -ne 0 ]; then
-    handle_error "docker-compose command failed! Check the logs..."
-fi
-
-echo -e "\n"
+log ""
 log_info "==================================================================="
-log_info " > [DOCKER]: Docker App Executed! [OK]"
-log_info ""
-log_info " > [Executed in Background...]"
+log_info " > [$TOOL_NAME]: Successfully Executed! [OK]"
 log_info "==================================================================="
-echo -e "\n"
+log ""
