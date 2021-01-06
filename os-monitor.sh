@@ -166,16 +166,16 @@ do
 
     DRIVE_CSV_FILE_NAME="_$DRIVE_ID.csv"
     
-    if [[ ! -f "$DRIVE_CSV_FILE_NAME" ]]; then
+    if [[ ! -f "$OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME" ]]; then
         # csv file does not exists. generate it.
         echo " > [$TOOL_NAME]: Generating '$DRIVE_CSV_FILE_NAME'..."
-        echo $DISK_CSV_TITLES >> $DRIVE_CSV_FILE_NAME
+        echo $DISK_CSV_TITLES >> $OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME
     fi
     DRIVE_CSV_VALUES="$CURRENT_DRIVE_VALUES,$xDATE,$xTIME"
     log " > Writing values to CSV file: '$DRIVE_CSV_FILE_NAME'"
-    echo $DRIVE_CSV_VALUES >> $DRIVE_CSV_FILE_NAME
+    echo $DRIVE_CSV_VALUES >> $OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME
 done
-
+log ""
 
 # change directory permissions
 # ----------------------------------------------------------------------
