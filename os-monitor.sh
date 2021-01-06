@@ -108,10 +108,12 @@ if [ "$CLEAN_OUTPUT" = true ]; then
     log_warning " > [$TOOL_NAME]: Clean Output selected!"
     log_warning " > DIR: $OS_MONITOR_OUT_DIR"
     log_warning " --------------------------------------------"
-    read -p "Are you sure you want to continue? [Y/y]" -n 1 -r
+    log ""
+    read -p " > Are you sure you want to continue? [Y/y]" -n 1 -r
     echo    # (optional) move to a new line
+    log ""
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        log " > Removing contents from: '$OS_MONITOR_OUT_DIR'"
+        log " > Removing contents from: '$OS_MONITOR_OUT_DIR/*'"
         rm -rf $OS_MONITOR_OUT_DIR/*
         log " > Removed! [OK]"
         log ""
@@ -171,6 +173,7 @@ do
         # csv file does not exists. generate it.
         echo " > [$TOOL_NAME]: Generating '$DRIVE_CSV_FILE_NAME'..."
         echo $DISK_CSV_TITLES >> $OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME
+        log ""
     fi
     DRIVE_CSV_VALUES="$CURRENT_DRIVE_VALUES,$xDATE,$xTIME_FMT"
     log " > Writing values to CSV file: '$DRIVE_CSV_FILE_NAME'"
