@@ -129,7 +129,7 @@ xTIME=$(date +"%H-%M-%S")
 xTIME_FMT=$(date +"%H:%M:%S")
 xDATE=$(date +"%m-%d-%Y")
 xDATE_SUMMARY=$(date +"%b-%d-%Y__%Z")
-DATE_FORMAT="$xDATE""__$xTIME""$__$xDATE_SUMMARY"
+DATE_FORMAT="$xDATE""__$xTIME""__$xDATE_SUMMARY"
 
 # get os metadata
 # ----------------------------------------------------------------------
