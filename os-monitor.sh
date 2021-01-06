@@ -173,10 +173,10 @@ do
         # csv file does not exists. generate it.
         echo " > [$TOOL_NAME]: Generating '$DRIVE_CSV_FILE_NAME'..."
         echo $DISK_CSV_TITLES >> $OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME
-        log ""
     fi
     DRIVE_CSV_VALUES="$CURRENT_DRIVE_VALUES,$xDATE,$xTIME_FMT"
     log " > Writing values to CSV file: '$DRIVE_CSV_FILE_NAME'"
+    log ""
     echo $DRIVE_CSV_VALUES >> $OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME
 done
 log ""
