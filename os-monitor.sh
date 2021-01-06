@@ -8,7 +8,6 @@ source logging_utils.sh
 # ----------------------------------------------------------------------
 
 TOOL_NAME="os-monitor"
-TOOLS_USER="servertool"
 
 TOOLS_ROOT_DIR=/opt/linux-server-tools
 OS_MONITOR_DIR=$TOOLS_ROOT_DIR/os-monitor
@@ -38,8 +37,8 @@ handle_error() {
 
 # run script as root
 # ----------------------------------------------------------------------
-if [ "$EUID" -ne 0 ] ; then
-    handle_error "Please run this script as 'root'"
+if [ "$EUID" -eq 0 ] ; then
+    handle_error "Not allowed to run this as 'root'. Please use another user."
     exit 1
 fi
 
@@ -55,26 +54,10 @@ while getopts "hdi" option; do
 done
 echo "" # new line
 
-# user validation
-# ----------------------------------------------------------------------
-log " > [$TOOL_NAME]: Validating Tools User '$TOOLS_USER'..."
-log "------------------------------------------------------------"
-
-USER_EXISTS_RES=$(grep -c "^$TOOLS_USER:" /etc/passwd)
-
-if [ $USER_EXISTS_RES -eq 0 ]; then
-    handle_error "User '$TOOLS_USER' does not exist. Please create it."
-else
-    log_info " > [$TOOL_NAME]: User '$TOOLS_USER' exists [OK]"
-    log ""
-fi
-
 # run scripts as other user
 # ----------------------------------------------------------------------
-log " > [$TOOL_NAME]: Run as Tools user '$TOOLS_USER'..."
+log " > [$TOOL_NAME]: Running scripts as user: '$(whoami)'..."
 log ""
-
-su - $TOOLS_USER
 
 # create directory structure (if not exists)
 # ----------------------------------------------------------------------
