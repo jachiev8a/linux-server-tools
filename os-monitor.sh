@@ -111,7 +111,10 @@ if [ "$CLEAN_OUTPUT" = true ]; then
     read -p "Are you sure you want to continue? [Y/y]" -n 1 -r
     echo    # (optional) move to a new line
     if [[ $REPLY =~ ^[Yy]$ ]]; then
+        log " > Removing contents from: '$OS_MONITOR_OUT_DIR'"
         rm -rf $OS_MONITOR_OUT_DIR/*
+        log " > Removed! [OK]"
+        log ""
     else
         log "Skipping Clean Output..."
         log ""
@@ -154,7 +157,7 @@ log ""
 log " > [$TOOL_NAME]: Starting CSV Generation..."
 log "------------------------------------------------------------"
 
-cat $FILE_NAME_DISK | while read line
+cat $OS_MONITOR_OUT_DIR/$FILE_NAME_DISK | while read line
 do
     # go trough all drives found inside the disk file
     CURRENT_DRIVE=$(echo $line | awk -F " " '{printf("%s", $1)}')
