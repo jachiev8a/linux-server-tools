@@ -74,7 +74,7 @@ fi
 log " > [$TOOL_NAME]: Run as Tools user '$TOOLS_USER'..."
 log ""
 
-sudo su - $TOOLS_USER
+su - $TOOLS_USER
 
 # create directory structure (if not exists)
 # ----------------------------------------------------------------------
