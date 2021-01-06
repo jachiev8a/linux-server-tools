@@ -124,9 +124,10 @@ fi
 # date time data
 # ----------------------------------------------------------------------
 xTIME=$(date +"%H-%M-%S")
+xTIME_FMT=$(date +"%H:%M:%S")
 xDATE=$(date +"%m-%d-%Y")
 xDATE_SUMMARY=$(date +"%b-%d-%Y__%Z")
-DATE_FORMAT="$xTIME""__$xDATE""$__$xDATE_SUMMARY"
+DATE_FORMAT="$xDATE""__$xTIME""$__$xDATE_SUMMARY"
 
 # get os metadata
 # ----------------------------------------------------------------------
@@ -171,7 +172,7 @@ do
         echo " > [$TOOL_NAME]: Generating '$DRIVE_CSV_FILE_NAME'..."
         echo $DISK_CSV_TITLES >> $OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME
     fi
-    DRIVE_CSV_VALUES="$CURRENT_DRIVE_VALUES,$xDATE,$xTIME"
+    DRIVE_CSV_VALUES="$CURRENT_DRIVE_VALUES,$xDATE,$xTIME_FMT"
     log " > Writing values to CSV file: '$DRIVE_CSV_FILE_NAME'"
     echo $DRIVE_CSV_VALUES >> $OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME
 done
