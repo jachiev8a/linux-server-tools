@@ -78,19 +78,19 @@ log ""
 # root dir
 if [ ! -d $TOOLS_ROOT_DIR ] ; then
     log_debug " > [$TOOL_NAME]: Creating main tools directory: $TOOLS_ROOT_DIR"
-    sudo -u $TOOLS_USER mkdir $TOOLS_ROOT_DIR
+    mkdir $TOOLS_ROOT_DIR
 fi
 
 # tool dir
 if [ ! -d $OS_MONITOR_DIR ] ; then
     log_debug " > [$TOOL_NAME]: Creating tool directory: $OS_MONITOR_DIR"
-    sudo -u $TOOLS_USER mkdir $OS_MONITOR_DIR
+    mkdir $OS_MONITOR_DIR
 fi
 
 # tool output dir
 if [ ! -d $OS_MONITOR_OUT_DIR ] ; then
     log_debug " > [$TOOL_NAME]: Creating tool output directory: $OS_MONITOR_OUT_DIR"
-    sudo -u $TOOLS_USER sudo -u $TOOLS_USER mkdir $OS_MONITOR_OUT_DIR
+    mkdir $OS_MONITOR_OUT_DIR
 fi
 
 log_info " > [$TOOL_NAME]: Directory Structure Successfully created [OK]"
@@ -103,22 +103,32 @@ DATE_FORMAT=$(date +"%m-%d-%Y__%H-%M-%S__%b-%d-%Y__%Z")
 log " > [$TOOL_NAME]: Getting Disk Space info..."
 log "------------------------------------------------------------"
 
-FILE_NAME_DISK="$TOOL_NAME"+"__disk__"+"$DATE_FORMAT.txt"
+FILE_NAME_DISK="$TOOL_NAME""__disk__""$DATE_FORMAT.txt"
 
 df -h | grep /dev/s > $OS_MONITOR_OUT_DIR/$FILE_NAME_DISK
 
-log_info " > [$TOOL_NAME]: disk space info to file: '$FILE_NAME_DISK'..."
+log_fine " > [$TOOL_NAME]: disk space info to file: '$FILE_NAME_DISK'..."
 log ""
 
 log " > [$TOOL_NAME]: Getting Memory info..."
 log "------------------------------------------------------------"
 
-FILE_NAME_MEM="$TOOL_NAME"+"__mem__"+"$DATE_FORMAT.txt"
+FILE_NAME_MEM="$TOOL_NAME""__mem__""$DATE_FORMAT.txt"
 
 free -ht > $OS_MONITOR_OUT_DIR/$FILE_NAME_MEM
 
-log_info " > [$TOOL_NAME]: memory info to file: '$FILE_NAME_MEM'..."
+log_fine " > [$TOOL_NAME]: memory info to file: '$FILE_NAME_MEM'..."
 log ""
+
+log_info " > [$TOOL_NAME]: OS Metadata successfully retrieved! [OK]"
+log ""
+
+# change directory permissions
+# ----------------------------------------------------------------------
+log " > [$TOOL_NAME]: Changing Directory permissions to user '$TOOLS_USER'"
+log "------------------------------------------------------------"
+
+chown -R $TOOLS_USER:$TOOLS_USER $TOOLS_ROOT_DIR
 
 exit 0
 

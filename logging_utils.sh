@@ -5,6 +5,14 @@ ANSI_LOG_RED="\e[91m"
 ANSI_LOG_GREEN="\e[92m"
 ANSI_LOG_YELLOW="\e[93m"
 ANSI_LOG_BLUE="\e[94m"
+ANSI_LOG_CYAN="\e[96m"
+
+# log_fine
+# ----------------------------------------------------------------------
+log_fine() {
+    log_msg=$1
+    echo -e "$ANSI_LOG_CYAN$log_msg$ANSI_LOG_OFF"
+}
 
 # log_debug
 # ----------------------------------------------------------------------
