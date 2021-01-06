@@ -55,9 +55,31 @@ while getopts "hdi" option; do
 done
 echo "" # new line
 
+# user validation
+# ----------------------------------------------------------------------
+log " > [$TOOL_NAME]: Validating Tools User '$TOOLS_USER'..."
+log "------------------------------------------------------------"
+
+USER_EXISTS_RES=$(grep -c "^$TOOLS_USER:" /etc/passwd)
+
+if [ $USER_EXISTS_RES -eq 0 ]; then
+    handle_error "User '$TOOLS_USER' does not exist. Please create it."
+else
+    log_info " > [$TOOL_NAME]: User '$TOOLS_USER' exists [OK]"
+    log ""
+fi
+
+# run scripts as other user
+# ----------------------------------------------------------------------
+log " > [$TOOL_NAME]: Run as Tools user '$TOOLS_USER'..."
+log ""
+
+sudo su - $TOOLS_USER
+
 # create directory structure (if not exists)
 # ----------------------------------------------------------------------
 log " > [$TOOL_NAME]: Validating Directory Structure..."
+log "------------------------------------------------------------"
 log ""
 
 # root dir
@@ -81,34 +103,29 @@ fi
 log_info " > [$TOOL_NAME]: Directory Structure Successfully created [OK]"
 log ""
 
-# user and directory permissions (if not exists)
-# ----------------------------------------------------------------------
-log " > [$TOOL_NAME]: Validating Tools User '$TOOLS_USER'..."
-log ""
-
-USER_EXISTS_RES=$(grep -c "^$TOOLS_USER:" /etc/passwd)
-
-if [ $USER_EXISTS_RES -eq 0 ]; then
-    handle_error "User '$TOOLS_USER' does not exist. Please create it."
-else
-    log_info " > [$TOOL_NAME]: User '$TOOLS_USER' exists [OK]"
-    log ""
-fi
-
-log " > [$TOOL_NAME]: Changing permissions to user '$TOOLS_USER' in '$TOOLS_ROOT_DIR'"
-log ""
-
-chown -R $TOOLS_USER:$TOOLS_USER $TOOLS_ROOT_DIR
-
 # get os metadata
 # ----------------------------------------------------------------------
-log " > [$TOOL_NAME]: Getting disk space..."
+DATE_FORMAT=$(date +"%m-%d-%Y__%H-%M-%S__%b-%d-%Y__%Z")
+
+log " > [$TOOL_NAME]: Getting Disk Space info..."
+log "------------------------------------------------------------"
+
+FILE_NAME_DISK="$TOOL_NAME"+"__disk__"+"$DATE_FORMAT.txt"
+
+df -h | grep /dev/s > $OS_MONITOR_OUT_DIR/$FILE_NAME_DISK
+
+log_info " > [$TOOL_NAME]: disk space info to file: '$FILE_NAME_DISK'..."
 log ""
 
-DATE_FORMAT=$(date +"%m-%d-%Y__%H-%M-%S__%b-%d-%Y__%Z")
-FILE_NAME="$TOOL_NAME__disk__$DATE_FORMAT.txt"
+log " > [$TOOL_NAME]: Getting Memory info..."
+log "------------------------------------------------------------"
 
-df -h | grep /dev/s > $OS_MONITOR_OUT_DIR/$FILE_NAME
+FILE_NAME_MEM="$TOOL_NAME"+"__mem__"+"$DATE_FORMAT.txt"
+
+free -ht > $OS_MONITOR_OUT_DIR/$FILE_NAME_MEM
+
+log_info " > [$TOOL_NAME]: memory info to file: '$FILE_NAME_MEM'..."
+log ""
 
 exit 0
 
