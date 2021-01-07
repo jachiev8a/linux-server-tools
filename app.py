@@ -27,6 +27,7 @@ def line():
     return render_template(
         'line_chart.html',
         title='Server Disk Usage',
+        dataset=disk_data_manager.get_drive_value(),
         max=disk_data_manager.get_max_value(),
         labels=line_labels,
         values=line_values

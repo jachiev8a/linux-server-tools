@@ -45,3 +45,16 @@ def get_max_value():
                 int_value = float(row[1].replace('M', '').replace('G', ''))
                 print("MAX: {}".format(int_value))
                 return int_value
+
+
+def get_drive_value():
+    with open('/opt/linux-server-tools/os-monitor/out/_dev-sda.csv', 'r') as file_obj:
+        csv_reader = csv.reader(file_obj, delimiter=',')
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                line_count += 1
+            else:
+                drive_value = row[0]
+                print("drive: {}".format(drive_value))
+                return drive_value

@@ -10,7 +10,7 @@
     <center>
         <h1>{{ title }}</h1>
 
-        <canvas id="diskChart" width="900" height="600"></canvas>
+        <canvas id="diskChart" style="display: block; height: 570px; width: 1140px;" width="1425" height="712"></canvas>
         <script>
 
         var ctx = document.getElementById('diskChart').getContext('2d');
@@ -25,19 +25,56 @@
                     {% endfor %}
                 ],
                 datasets: [{
-                    label: 'My First dataset',
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
+                    label: {{ dataset }},
+                    backgroundColor: window.chartColors.red,
+					borderColor: window.chartColors.red,
                     data: [
                         {% for item in values %}
                             {{ item }},
                         {% endfor %}
                     ]
+                    fill: true,
                 }]
             },
 
             // Configuration options go here
-            options: {}
+            options: {
+                responsive: true,
+				title: {
+					display: true,
+					text: 'Disk Space Line Chart'
+				},
+				tooltips: {
+					mode: 'index',
+					intersect: false,
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Total Size (GB)'
+                        }
+                        ticks: {
+                            beginAtZero: true,
+                            steps: 10,
+                            stepValue: 5,
+                            max: {{ max }}
+                        }
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Current Data Size'
+						}
+					}]
+				}
+            }
         });
 
         </script>
