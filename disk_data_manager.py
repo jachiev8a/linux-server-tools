@@ -21,6 +21,8 @@ MONTHS = {
     '12': 'DEC'
 }
 
+CSV_FILES_PATH = "/opt/linux-server-tools/os-monitor/out/"
+
 
 def get_date_labels():
     labels = get_labels()
@@ -28,7 +30,7 @@ def get_date_labels():
     for label in labels:
         date_without_month = label[2:]
         month_name = MONTHS[label[:2]]
-        named_date = "{}/{}".format(month_name, date_without_month)
+        named_date = "{}{}".format(month_name, date_without_month)
         date_labels.append(named_date)
     return date_labels
     
