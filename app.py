@@ -1,4 +1,7 @@
 from flask import Flask, Markup, render_template
+from disk_data_manager import get_labels
+from disk_data_manager import get_values
+from disk_data_manager import get_max_value
 
 app = Flask(__name__)
 
@@ -19,17 +22,29 @@ colors = [
     "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
     "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
 
+@app.route('/line')
+def line():
+    line_labels = get_labels()
+    line_values = get_values()
+    return render_template(
+        'line_chart.html',
+        title='Server Disk Usage',
+        max=get_max_value(),
+        labels=line_labels,
+        values=line_values
+    )
+
 @app.route('/bar')
 def bar():
     bar_labels=labels
     bar_values=values
-    return render_template('bar_chart.html', title='Bitcoin Monthly Price in USD', max=17000, labels=bar_labels, values=bar_values)
-
-@app.route('/line')
-def line():
-    line_labels=labels
-    line_values=values
-    return render_template('line_chart.html', title='Bitcoin Monthly Price in USD', max=17000, labels=line_labels, values=line_values)
+    return render_template(
+        'bar_chart.html',
+        title='Server Disk Usage',
+        max=17000,
+        labels=bar_labels,
+        values=bar_values
+    )
 
 @app.route('/pie')
 def pie():
