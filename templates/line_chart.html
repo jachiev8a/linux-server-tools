@@ -57,7 +57,7 @@
                 ]
             };
 
-            var maxChartValue = {{ max }}
+            var maxYAxisValue = {{ max }}
             var steps = 10
 
             // Disk Chart Options
@@ -92,8 +92,8 @@
                         },
                         ticks: {
                             min: 0,
-                            max: maxChartValue,
-                            stepSize: Math.ceil( max / steps ),
+                            max: maxYAxisValue,
+                            stepSize: Math.ceil( maxYAxisValue / steps ),
                             steps: steps
                         }
                     }]
