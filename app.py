@@ -1,7 +1,5 @@
 from flask import Flask, Markup, render_template
-from disk_data_manager import get_labels
-from disk_data_manager import get_values
-from disk_data_manager import get_max_value
+import disk_data_manager
 
 app = Flask(__name__)
 
@@ -24,12 +22,12 @@ colors = [
 
 @app.route('/line')
 def line():
-    line_labels = get_labels()
-    line_values = get_values()
+    line_labels = disk_data_manager.get_labels()
+    line_values = disk_data_manager.get_values()
     return render_template(
         'line_chart.html',
         title='Server Disk Usage',
-        max=get_max_value(),
+        max=disk_data_manager.get_max_value(),
         labels=line_labels,
         values=line_values
     )

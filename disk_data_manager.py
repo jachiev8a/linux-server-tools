@@ -8,7 +8,7 @@ def get_labels():
         for row in csv_reader:
             labels_list = str(row).split(',')
             print("labels: {}".format(labels_list))
-            break
+            return labels_list
 
 
 def get_values():
@@ -24,6 +24,7 @@ def get_values():
                 print("val: {}".format(int_value))
                 value_list.append(int_value)
                 line_count += 1
+        return value_list
 
 
 def get_max_value():
