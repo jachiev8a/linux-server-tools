@@ -20,7 +20,7 @@ colors = [
     "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
     "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
 
-@app.route('/line')
+@app.route('/disk')
 def line():
     line_labels = disk_data_manager.get_labels()
     line_values = disk_data_manager.get_values()
