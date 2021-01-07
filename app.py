@@ -80,7 +80,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='[Flask] app.py')
     parser.add_argument(
         '-l', '--log-level',
-        default="warning",
+        default="info",
         required=False,
         help='debugging script log level '
              '[ critical > error > warning > info > debug > off ]')
