@@ -21,12 +21,12 @@ colors = [
     "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
 
 @app.route('/disk')
-def line():
-    line_labels = disk_data_manager.get_labels()
+def line_disk_chart():
+    line_labels = disk_data_manager.get_date_labels()
     line_values = disk_data_manager.get_values()
     return render_template(
         'line_chart.html',
-        title='Server Disk Usage',
+        title='Server Disk Usage (Daily)',
         dataset_name=disk_data_manager.get_drive_value(),
         max=disk_data_manager.get_max_value(),
         labels=line_labels,
@@ -50,6 +50,7 @@ def pie():
     pie_labels = labels
     pie_values = values
     return render_template('pie_chart.html', title='Bitcoin Monthly Price in USD', max=17000, set=zip(values, labels, colors))
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
