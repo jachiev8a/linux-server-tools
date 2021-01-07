@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # import other libraries
-source logging_utils.sh
+source ./utils/logging_utils.sh
 
 # ----------------------------------------------------------------------
 # Script definitions

@@ -1,5 +1,25 @@
-from flask import Flask, Markup, render_template
+#!flask/bin/python
+# coding=utf-8
+"""
+Main script to manage swarm api with several utils
+"""
+
+# core libs
+import logging
+import os
+import argparse
+
+# flask libs
+from flask import Flask
+from flask import Markup
+from flask import render_template
+
+# custom libs
 import disk_data_manager
+from utils.logging_utils import setup_logger
+
+# main logger instance
+LOGGER = logging.getLogger()
 
 app = Flask(__name__)
 
@@ -20,18 +40,20 @@ colors = [
     "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
     "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
 
+
 @app.route('/disk')
 def line_disk_chart():
     line_labels = disk_data_manager.get_date_labels()
-    line_values = disk_data_manager.get_values()
+    line_values = disk_data_manager.get_x_values()
     return render_template(
-        'line_chart.html',
+        'disk_chart.html',
         title='Server Disk Usage (Daily)',
-        dataset_name=disk_data_manager.get_drive_value(),
+        dataset_name=disk_data_manager.get_drive_name(),
         max=disk_data_manager.get_max_value(),
         labels=line_labels,
         values=line_values
     )
+
 
 @app.route('/bar')
 def bar():
@@ -53,4 +75,22 @@ def pie():
 
 
 if __name__ == '__main__':
+
+    # Script Argument Parser
+    parser = argparse.ArgumentParser(description='[Flask] app.py')
+    parser.add_argument(
+        '-l', '--log-level',
+        default="warning",
+        required=False,
+        help='debugging script log level '
+             '[ critical > error > warning > info > debug > off ]')
+    args = parser.parse_args()
+
+    # configure logging properties with configuration given
+    setup_logger(
+        logger_object=LOGGER,
+        log_level_console=args.log_level,
+        log_file_name=os.path.basename(__file__)
+    )
+
     app.run(host='0.0.0.0')
