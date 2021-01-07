@@ -13,31 +13,28 @@
         <canvas id="diskChart" style="height: 570px; width: 1140px;" width="1425" height="712"></canvas>
         <script>
 
-            var chartConfig = {
-
+            var ctx = document.getElementById('diskChart').getContext('2d');
+            var chart = new Chart(ctx, {
                 // The type of chart we want to create
                 type: 'line',
-
-                // The data for dataset
+                // The data for our dataset
                 data: {
                     labels: [
                         {% for item in labels %}
                             "{{ item }}",
                         {% endfor %}
                     ],
-                    datasets: [
-                        {
-                            label: {{ dataset }},
-                            backgroundColor: window.chartColors.red,
-                            borderColor: window.chartColors.red,
-                            data: [
-                                {% for item in values %}
-                                    {{ item }},
-                                {% endfor %}
-                            ]
-                            fill: true,
-                        }
-                    ]
+                    datasets: [{
+                        label: {{ dataset }},
+                        backgroundColor: window.chartColors.red,
+                        borderColor: window.chartColors.red,
+                        data: [
+                            {% for item in values %}
+                                {{ item }},
+                            {% endfor %}
+                        ]
+                        fill: true,
+                    }]
                 },
 
                 // Configuration options go here
@@ -61,7 +58,7 @@
                             scaleLabel: {
                                 display: true,
                                 labelString: 'Total Size (GB)'
-                            },
+                            }
                             ticks: {
                                 beginAtZero: true,
                                 steps: 10,
@@ -78,12 +75,7 @@
                         }]
                     }
                 }
-            };
-
-            window.onload = function() {
-                var ctx = document.getElementById('diskChart').getContext('2d');
-                window.myLine = new Chart(ctx, chartConfig);
-            };
+            });
 
         </script>
     </center>
