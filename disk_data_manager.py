@@ -7,6 +7,7 @@ def get_labels():
         csv_reader = csv.reader(file_obj, delimiter=',')
         for row in csv_reader:
             labels_list = str(row).split(',')
+            print("labels: ".format(labels_list))
             break
 
 
@@ -20,6 +21,7 @@ def get_values():
                 line_count += 1
             else:
                 int_value = float(row[2].replace('M', '').replace('G', ''))
+                print("val: ".format(int_value))
                 value_list.append(int_value)
                 line_count += 1
 
@@ -33,4 +35,5 @@ def get_max_value():
                 line_count += 1
             else:
                 int_value = float(row[1].replace('M', '').replace('G', ''))
+                print("MAX: ".format(int_value))
                 return int_value
