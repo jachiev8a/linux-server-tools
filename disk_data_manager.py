@@ -5,10 +5,17 @@ import csv
 def get_labels():
     with open('/opt/linux-server-tools/os-monitor/out/_dev-sda.csv', 'r') as file_obj:
         csv_reader = csv.reader(file_obj, delimiter=',')
+        line_count = 0
+        labels_list = []
         for row in csv_reader:
-            labels_list = str(row).split(',')
-            print("labels: {}".format(labels_list))
-            return labels_list
+            if line_count == 0:
+                line_count += 1
+            else:
+                label_value = row[6].replace('-', '/')
+                print("val: {}".format(label_value))
+                labels_list.append(label_value)
+                line_count += 1
+        return labels_list
 
 
 def get_values():
