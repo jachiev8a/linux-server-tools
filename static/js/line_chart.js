@@ -10,7 +10,7 @@ var diskChartData = {
     labels: labelsData,
     datasets: [
         {
-            label: "{{ dataset_name }}",
+            label: datasetName,
             backgroundColor: "rgba(151, 187, 205, 0.2)",
             borderColor: "rgba(151, 187, 205, 1)",
 
