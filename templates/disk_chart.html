@@ -7,6 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
 
+    <link rel="shortcut icon"
+        href="{{ url_for('static', filename='img/favicon.ico') }}">
     <style>
         body {
             font-family: 'Open Sans', serif;
@@ -20,7 +22,7 @@
         <h3>{{ title }}</h3>
 
         <canvas id="diskChart" width="1300" height="620"></canvas>
-        <script src="templates/js/line_chart.js" ></script>
+        <script src="{{url_for('static', filename='js/line_chart.js')}}" ></script>
 
     </center>
 </body>
