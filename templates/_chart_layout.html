@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Block to override the title of the page -->
+    {% block head %}
+    <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+    
+    <meta charset="utf-8" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <!-- CSS: layout base -->
+    <link rel="stylesheet" href="{{url_for('static', filename='css/layout.css')}}">
+
+</head>
+
+{% block body_content %}
+{% endblock %}
+
+</html>

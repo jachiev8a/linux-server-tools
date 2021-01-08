@@ -1,11 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<link href="https://fonts.googleapis.com/css?family=Encode+Sans+Semi+Condensed:100,200,300,400" rel="stylesheet">
-<link rel="stylesheet" href="{{url_for('static', filename='css/error_500.css')}}">
+{% extends "_chart_layout.html" %}
+{% block title %}Error 500{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{url_for('static', filename='css/error_500.css')}}">
+{% endblock %}
+
+{% block body_content %}
 <body class="loading">
   <h1>500</h1>
   <h2>Unexpected Error <b>:(</b></h2>
   <h2>Error: {{ error_msg }}</h2>
+  </br>
   <div class="gears">
     <div class="gear one">
       <div class="bar"></div>
@@ -26,4 +32,4 @@
   <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   <script src="{{url_for('static', filename='js/error_500.js')}}" type="text/javascript"></script>
 </body>
-</html>
+{% endblock %}

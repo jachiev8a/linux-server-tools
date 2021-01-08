@@ -49,7 +49,8 @@ def line_disk_chart():
 
 @app.route('/test/error/500')
 def test_error_500():
-    return render_template('error_500.html')
+    error_msg = "This is for testing only. No ERROR 500."
+    return render_template('error_500.html', error_msg=error_msg)
 
 
 if __name__ == '__main__':

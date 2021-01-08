@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>{{ title }}</title>
+{% extends "_chart_layout.html" %}
+{% block title %}Disk Usage Chart{% endblock %}
+{% block head %}
+    {{ super() }}
 
+    <!-- override the javascript code needed for charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
 
-    <link rel="shortcut icon"
-        href="{{ url_for('static', filename='img/favicon.ico') }}">
-    <style>
-        body {
-            font-family: 'Open Sans', serif;
-            font-size: 16px;
-        }
-    </style>
-</head>
+{% endblock %}
 
+{% block body_content %}
 <body>
     <center>
         <h3>{{ title }}</h3>
@@ -51,4 +43,4 @@
 
     </center>
 </body>
-</html>
+{% endblock %}
