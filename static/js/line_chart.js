@@ -7,11 +7,7 @@ Chart.defaults.global.defaultFontSize = 15;
 // Disk Chart Data
 // --------------------------------------------------
 var diskChartData = {
-    labels: [
-        {% for item in labels %}
-            "{{ item }}",
-        {% endfor %}
-    ],
+    labels: labelsData,
     datasets: [
         {
             label: "{{ dataset_name }}",
@@ -25,16 +21,11 @@ var diskChartData = {
             pointHoverBorderColor: "#fff",
 
             borderWidth: 4,
-            data: [
-                {% for item in values %}
-                    {{ item }},
-                {% endfor %}
-            ]
+            data: datasetData
         }
     ]
 };
 
-var maxYAxisValue = {{ max }}
 var steps = 11
 
 // Disk Chart Options

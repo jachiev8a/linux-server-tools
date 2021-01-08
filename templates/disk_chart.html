@@ -22,6 +22,30 @@
         <h3>{{ title }}</h3>
 
         <canvas id="diskChart" width="1300" height="620"></canvas>
+
+        <script>
+            var labelsData =
+            [
+                {% for item in labels %}
+                    "{{ item }}",
+                {% endfor %}
+            ]
+        </script>
+
+        <script>
+            var datasetData =
+            [
+                {% for item in values %}
+                    {{ item }},
+                {% endfor %}
+            ]
+        </script>
+
+        <script>
+            var maxYAxisValue = {{ max }}
+            var steps = 11
+        </script>
+
         <script src="{{url_for('static', filename='js/line_chart.js')}}" ></script>
 
     </center>
