@@ -44,7 +44,7 @@ colors = [
 @app.route('/disk')
 def line_disk_chart():
     line_labels = disk_data_manager.get_date_labels()
-    line_values = disk_data_manager.get_x_values()
+    line_values = disk_data_manager.get_current_size_values()
     return render_template(
         'disk_chart.html',
         title='Server Disk Usage (Daily)',

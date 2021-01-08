@@ -33,7 +33,7 @@ CSV_FILES_PATH = "/opt/linux-server-tools/os-monitor/out/"
 
 
 def get_date_labels():
-    labels = get_y_values()
+    labels = get_date_values()
     date_labels = []
     for label in labels:
         date_without_month = label[2:]
@@ -43,7 +43,7 @@ def get_date_labels():
     return date_labels
     
 
-def get_x_values():
+def get_date_values():
     csv_rows = __parse_csv_content('/opt/linux-server-tools/os-monitor/out/_dev-sda.csv')
     labels_list = []
     for row in csv_rows:
@@ -53,7 +53,7 @@ def get_x_values():
     return labels_list
 
 
-def get_y_values():
+def get_current_size_values():
     csv_rows = __parse_csv_content('/opt/linux-server-tools/os-monitor/out/_dev-sda.csv')
     value_list = []
     for row in csv_rows:
