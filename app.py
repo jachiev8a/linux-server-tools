@@ -55,6 +55,11 @@ def line_disk_chart():
     )
 
 
+@app.route('/test/500')
+def test_error_500():
+    return render_template('error_500.html')
+
+
 @app.route('/bar')
 def bar():
     bar_labels=labels

@@ -5,6 +5,7 @@ Module disk data manager
 
 import csv
 import logging
+import os
 
 # main logger instance
 LOGGER = logging.getLogger(__name__)
@@ -80,6 +81,8 @@ def get_drive_name():
 
 
 def __parse_csv_content(csv_file):
+    if not os.path.exists(csv_file):
+        LOGGER.error("CSV file does not exists! : '{}'".format(csv_file))
     LOGGER.info("Parsing CSV file: '{}'".format(csv_file))
     with open(csv_file, 'r') as file_obj:
         csv_reader = csv.reader(file_obj, delimiter=',')
