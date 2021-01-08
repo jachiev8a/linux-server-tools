@@ -10,7 +10,7 @@ RUN pip3 install --upgrade pip && \
 
 COPY [".", "/app/"]
 
-EXPOSE 3000
+EXPOSE 5000
 
 # run server to be seen from outside
 # ----------------------------------------------------------------------

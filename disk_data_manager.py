@@ -30,7 +30,7 @@ MONTHS = {
     '12': 'DEC'
 }
 
-CSV_FILES_PATH = "/opt/linux-server-tools/os-monitor/out/"
+CSV_FILES_PATH = "/os-monitor/output"
 CSV_DISK_FILE = os.path.join(CSV_FILES_PATH, '_dev-sda.csv')
 
 
