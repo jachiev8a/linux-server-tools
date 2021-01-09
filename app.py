@@ -50,8 +50,8 @@ def line_disk_chart():
         disk_total_size=disk_data_manager.get_max_value(),
         line_chart_labels=date_named_values,
         line_chart_values=disk_size_values,
-        disk_usage_labels=last_date_named_value,
-        disk_usage_values=last_disk_size_value
+        disk_usage_label=last_date_named_value,
+        disk_usage_value=last_disk_size_value
     )
 
 

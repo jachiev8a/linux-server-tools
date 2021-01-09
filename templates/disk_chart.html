@@ -50,21 +50,8 @@
         </script>
 
         <script>
-            var diskUsageLabelsData =
-            [
-                {% for item in disk_usage_labels %}
-                    "{{ item }}",
-                {% endfor %}
-            ]
-        </script>
-
-        <script>
-            var diskUsageDatasetData =
-            [
-                {% for item in disk_usage_values %}
-                    {{ item }},
-                {% endfor %}
-            ]
+            var diskUsageLabelsData = [ "{{ disk_usage_label }}" ]
+            var diskUsageDatasetData = [ {{ disk_usage_value }} ]
         </script>
 
         <script src="{{url_for('static', filename='js/disk_chart.js')}}" ></script>
