@@ -31,7 +31,7 @@ def line_disk_chart():
     error_msg = disk_data_manager.validate_source_data()
     if error_msg is not None:
         return render_template(
-            'error_500.html',
+            'errors/error_500.html',
             error_msg=error_msg
         )
 
