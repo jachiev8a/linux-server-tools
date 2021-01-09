@@ -1,16 +1,19 @@
 
-var diskChart = document.getElementById("diskChart");
+var diskLineChart = document.getElementById("diskLineChart");
+var diskUsageChart = document.getElementById("diskUsageChart");
 
 Chart.defaults.global.defaultFontFamily = "sans-serif";
 Chart.defaults.global.defaultFontSize = 15;
 
-// Disk Chart Data
+// Disk Line Chart Data
 // --------------------------------------------------
-var diskChartData = {
-    labels: labelsData,
+var diskLineChartData = {
+    /* external */
+    labels: lineLabelsData,
     datasets: [
         {
-            label: datasetName,
+            /* external */
+            label: lineDatasetName,
             backgroundColor: "rgba(151, 187, 205, 0.2)",
             borderColor: "rgba(151, 187, 205, 1)",
 
@@ -21,16 +24,15 @@ var diskChartData = {
             pointHoverBorderColor: "#fff",
 
             borderWidth: 4,
-            data: datasetData
+            /* external */
+            data: lineDatasetData
         }
     ]
 };
 
-var steps = 11
-
-// Disk Chart Options
+// Disk Line Chart Options
 // --------------------------------------------------
-var diskChartOptions = {
+var diskLineChartOptions = {
     responsive: false,
     title: {
         display: true,
@@ -60,16 +62,78 @@ var diskChartOptions = {
             },
             ticks: {
                 min: 0,
+                /* external */
                 max: maxYAxisValue,
-                stepSize: Math.ceil( maxYAxisValue / steps ),
-                steps: steps
+                /* external */
+                stepSize: Math.ceil( maxYAxisValue / lineChartSteps ),
+                steps: lineChartSteps
             }
         }]
     }
 };
 
-var lineChart = new Chart(diskChart, {
+// Disk Line Chart Main Instance
+// --------------------------------------------------
+var lineChart = new Chart(diskLineChart, {
     type: 'line',
-    data: diskChartData,
-    options: diskChartOptions
+    data: diskLineChartData,
+    options: diskLineChartOptions
+});
+
+// Disk Current Usage Chart Data
+// --------------------------------------------------
+var diskUsageChartData = {
+    labels: diskUsageLabelsData,
+    datasets: [
+        {
+            label: diskUsageDatasetName,
+
+            backgroundColor: "rgba(151, 187, 205, 0.2)",
+            borderColor: "rgba(151, 187, 205, 1)",
+
+            data: diskUsageDatasetData
+        }
+    ]
+};
+
+// Disk Current Usage Chart Options
+// --------------------------------------------------
+var diskUsageChartOptions = {
+    responsive: false,
+    title: {
+        display: true,
+        text: 'Disk Usage (Current)'
+    },
+    scales: {
+        xAxes: [{
+            display: true,
+            scaleLabel: {
+                display: true,
+                labelString: 'Current Data Size (GB)'
+            }
+        }],
+        yAxes: [{
+            display: true,
+            scaleLabel: {
+                display: true,
+                labelString: 'Total Size (GB)'
+            },
+            ticks: {
+                min: 0,
+                /* external */
+                max: maxDiskUsage,
+                /* external */
+                stepSize: Math.ceil( maxDiskUsage / diskUsageSteps ),
+                steps: diskUsageSteps
+            }
+        }]
+    }
+};
+
+// Disk Current Usage Chart Main Instance
+// --------------------------------------------------
+var usageChart = new Chart(diskUsageChart, {
+    type: 'bar',
+    data: diskUsageChartData,
+    options: diskUsageChartOptions
 });

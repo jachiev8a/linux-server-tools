@@ -42,7 +42,7 @@ def validate_source_data():
     return None
 
 
-def get_date_labels():
+def get_date_named_values():
     labels = get_date_values()
     date_labels = []
     for label in labels:
@@ -51,7 +51,7 @@ def get_date_labels():
         named_date = "{}{}".format(month_name, date_without_month)
         date_labels.append(named_date)
     return date_labels
-    
+
 
 def get_date_values():
     csv_rows = __parse_csv_content(CSV_DISK_FILE)

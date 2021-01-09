@@ -11,29 +11,57 @@
 {% block body_content %}
 <body>
     <center>
-        <h3>{{ title }}</h3>
+        <h3>{{ line_chart_title }}</h3>
 
-        <canvas id="diskChart" width="1300" height="620"></canvas>
+        <canvas id="diskLineChart" width="1300" height="620"></canvas>
 
         <script>
-            var datasetName     = "{{ dataset_name }}"
-            var maxYAxisValue   = {{ max }}
-            var steps = 11
+            var lineDatasetName     = "{{ disk_name }}"
+            var maxYAxisValue       = {{ disk_total_size }}
+            var lineChartSteps      = 11
         </script>
 
         <script>
-            var labelsData =
+            var lineLabelsData =
             [
-                {% for item in labels %}
+                {% for item in line_chart_labels %}
                     "{{ item }}",
                 {% endfor %}
             ]
         </script>
 
         <script>
-            var datasetData =
+            var lineDatasetData =
             [
-                {% for item in values %}
+                {% for item in line_chart_values %}
+                    {{ item }},
+                {% endfor %}
+            ]
+        </script>
+
+        <h3>{{ disk_usage_title }}</h3>
+
+        <canvas id="diskUsageChart" width="600" height="400"></canvas>
+
+        <script>
+            var diskUsageDatasetName    = "{{ disk_name }}"
+            var maxDiskUsage            = {{ disk_total_size }}
+            var diskUsageSteps          = 11
+        </script>
+
+        <script>
+            var diskUsageLabelsData =
+            [
+                {% for item in disk_usage_labels %}
+                    "{{ item }}",
+                {% endfor %}
+            ]
+        </script>
+
+        <script>
+            var diskUsageDatasetData =
+            [
+                {% for item in disk_usage_values %}
                     {{ item }},
                 {% endfor %}
             ]

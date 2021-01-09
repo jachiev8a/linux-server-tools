@@ -35,15 +35,23 @@ def line_disk_chart():
             error_msg=error_msg
         )
 
-    line_labels = disk_data_manager.get_date_labels()
-    line_values = disk_data_manager.get_current_size_values()
+    # retrieve disk data from CSV
+    date_named_values = disk_data_manager.get_date_named_values()
+    disk_size_values = disk_data_manager.get_current_size_values()
+
+    last_date_named_value = date_named_values[-1]
+    last_disk_size_value = disk_size_values[-1]
+
     return render_template(
         'disk_chart.html',
-        title='Server Disk Usage (Daily)',
-        dataset_name=disk_data_manager.get_drive_name(),
-        max=disk_data_manager.get_max_value(),
-        labels=line_labels,
-        values=line_values
+        line_chart_title='Server Disk Usage (Daily)',
+        disk_usage_title='Disk Usage (Current)',
+        disk_name=disk_data_manager.get_drive_name(),
+        disk_total_size=disk_data_manager.get_max_value(),
+        line_chart_labels=date_named_values,
+        line_chart_values=disk_size_values,
+        disk_usage_labels=last_date_named_value,
+        disk_usage_values=last_disk_size_value
     )
 
 
