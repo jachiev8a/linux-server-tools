@@ -86,7 +86,7 @@ var diskUsageChartData = {
     labels: diskUsageLabelsData,
     datasets: [
         {
-            label: diskUsageDatasetName,
+            label: 'Current',
 
             backgroundColor: "rgba(38, 194, 129, 1)",
             borderColor: "rgba(38, 194, 129, 1)",
@@ -94,7 +94,7 @@ var diskUsageChartData = {
             data: diskUsageDatasetData
         },
         {
-            label: diskTotalLabelsData,
+            label: 'Total',
 
             backgroundColor: "rgba(151, 187, 205, 0.2)",
             borderColor: "rgba(151, 187, 205, 1)",
