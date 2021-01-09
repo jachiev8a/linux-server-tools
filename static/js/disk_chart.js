@@ -88,16 +88,16 @@ var diskUsageChartData = {
         {
             label: diskUsageDatasetName,
 
-            backgroundColor: "rgba(151, 187, 205, 0.2)",
-            borderColor: "rgba(151, 187, 205, 1)",
+            backgroundColor: "rgba(38, 194, 129, 1)",
+            borderColor: "rgba(38, 194, 129, 1)",
 
             data: diskUsageDatasetData
         },
         {
             label: diskTotalLabelsData,
 
-            backgroundColor: "rgba(0, 230, 64, 1)",
-            borderColor: "rgba(0, 230, 64, 1)",
+            backgroundColor: "rgba(151, 187, 205, 0.2)",
+            borderColor: "rgba(151, 187, 205, 1)",
 
             data: diskTotalDatasetData
         }
@@ -110,7 +110,7 @@ var diskUsageChartOptions = {
     responsive: false,
     title: {
         display: true,
-        text: 'Disk Usage (Current)'
+        text: 'Disk Usage Chart'
     },
     scales: {
         xAxes: [{
@@ -118,7 +118,7 @@ var diskUsageChartOptions = {
             stacked: true,
             scaleLabel: {
                 display: true,
-                labelString: 'Data Size (GB)'
+                labelString: 'Disk Size (GB)'
             }
         }],
         yAxes: [{
