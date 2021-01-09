@@ -32,7 +32,7 @@ MONTHS = {
 }
 
 CSV_FILES_PATH = "/os-monitor/output"
-CSV_DISK_FILE = os.path.join(CSV_FILES_PATH, '_dev-sda.csv')
+CSV_DISK_FILE = os.path.join(CSV_FILES_PATH, '_dev-sdc1.csv')
 
 
 def validate_source_data():
