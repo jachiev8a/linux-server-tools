@@ -123,7 +123,6 @@ var diskUsageChartOptions = {
         }],
         yAxes: [{
             display: true,
-            stacked: true,
             scaleLabel: {
                 display: true,
                 labelString: 'Total Disk Size (GB)'
