@@ -38,9 +38,13 @@ def line_disk_chart():
     # retrieve disk data from CSV
     date_named_values = disk_data_manager.get_date_named_values()
     disk_size_values = disk_data_manager.get_current_size_values()
+    disk_in_use_values = disk_data_manager.get_in_use_values()
 
     last_date_named_value = date_named_values[-1]
     last_disk_size_value = disk_size_values[-1]
+    last_disk_in_use_value = disk_in_use_values[-1]
+
+    disk_usage_label = "{} ({})".format(last_date_named_value, last_disk_in_use_value)
 
     return render_template(
         'disk_chart.html',
@@ -50,7 +54,7 @@ def line_disk_chart():
         disk_total_size=disk_data_manager.get_max_value(),
         line_chart_labels=date_named_values,
         line_chart_values=disk_size_values,
-        disk_usage_label=last_date_named_value,
+        disk_usage_label=disk_usage_label,
         disk_usage_value=last_disk_size_value
     )
 

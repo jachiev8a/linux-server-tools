@@ -92,6 +92,14 @@ var diskUsageChartData = {
             borderColor: "rgba(151, 187, 205, 1)",
 
             data: diskUsageDatasetData
+        },
+        {
+            label: diskTotalLabelsData,
+
+            backgroundColor: "rgba(0, 230, 64, 1)",
+            borderColor: "rgba(0, 230, 64, 1)",
+
+            data: diskTotalDatasetData
         }
     ]
 };
@@ -107,16 +115,18 @@ var diskUsageChartOptions = {
     scales: {
         xAxes: [{
             display: true,
+            stacked: true,
             scaleLabel: {
                 display: true,
-                labelString: 'Current Data Size (GB)'
+                labelString: 'Data Size (GB)'
             }
         }],
         yAxes: [{
             display: true,
+            stacked: true,
             scaleLabel: {
                 display: true,
-                labelString: 'Total Size (GB)'
+                labelString: 'Total Disk Size (GB)'
             },
             ticks: {
                 min: 0,

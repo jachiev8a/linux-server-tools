@@ -41,17 +41,20 @@
 
         <h3>{{ disk_usage_title }}</h3>
 
-        <canvas id="diskUsageChart" width="600" height="400"></canvas>
+        <canvas id="diskUsageChart" width="700" height="300"></canvas>
 
         <script>
             var diskUsageDatasetName    = "{{ disk_name }}"
             var maxDiskUsage            = {{ disk_total_size }}
-            var diskUsageSteps          = 11
+            var diskUsageSteps          = 6
         </script>
 
         <script>
-            var diskUsageLabelsData = [ "{{ disk_usage_label }}" ]
+            var diskUsageLabelsData = [ "Current" ]
             var diskUsageDatasetData = [ {{ disk_usage_value }} ]
+
+            var diskTotalLabelsData = [ "Total" ]
+            var diskTotalDatasetData = [ {{ disk_total_size }} ]
         </script>
 
         <script src="{{url_for('static', filename='js/disk_chart.js')}}" ></script>

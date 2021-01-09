@@ -13,6 +13,7 @@ LOGGER = logging.getLogger(__name__)
 CSV_POSITION_DRIVE_NAME = 0
 CSV_POSITION_TOTAL_SIZE = 1
 CSV_POSITION_CURRENT_SIZE = 2
+CSV_POSITION_IN_USE_SIZE = 4
 CSV_POSITION_DATE = 6
 
 MONTHS = {
@@ -35,14 +36,17 @@ CSV_DISK_FILE = os.path.join(CSV_FILES_PATH, '_dev-sda.csv')
 
 
 def validate_source_data():
+    # type: () -> str
+    error_msg = None
     if not os.path.exists(CSV_FILES_PATH):
-        return "Source Data Path does not exists! ('{}')".format(CSV_FILES_PATH)
-    if not os.path.exists(CSV_DISK_FILE):
-        return "CSV Source Data file does not exists! ('{}')".format(CSV_DISK_FILE)
-    return None
+        error_msg = "Source Data Path does not exists! ('{}')".format(CSV_FILES_PATH)
+    elif not os.path.exists(CSV_DISK_FILE):
+        error_msg = "CSV Source Data file does not exists! ('{}')".format(CSV_DISK_FILE)
+    return error_msg
 
 
 def get_date_named_values():
+    # type: () -> list[str]
     labels = get_date_values()
     date_labels = []
     for label in labels:
@@ -54,6 +58,7 @@ def get_date_named_values():
 
 
 def get_date_values():
+    # type: () -> list[str]
     csv_rows = __parse_csv_content(CSV_DISK_FILE)
     labels_list = []
     for row in csv_rows:
@@ -64,6 +69,7 @@ def get_date_values():
 
 
 def get_current_size_values():
+    # type: () -> list[float]
     csv_rows = __parse_csv_content(CSV_DISK_FILE)
     value_list = []
     for row in csv_rows:
@@ -73,7 +79,19 @@ def get_current_size_values():
     return value_list
 
 
+def get_in_use_values():
+    # type: () -> list[str]
+    csv_rows = __parse_csv_content(CSV_DISK_FILE)
+    in_use_value_list = []
+    for row in csv_rows:
+        in_use_value = row[CSV_POSITION_IN_USE_SIZE]
+        LOGGER.debug("Drive In Use value retrieved: '{}'".format(in_use_value))
+        in_use_value_list.append(in_use_value)
+    return in_use_value_list
+
+
 def get_max_value():
+    # type: () -> float
     csv_rows = __parse_csv_content(CSV_DISK_FILE)
     for row in csv_rows:
         max_size_value = float(row[CSV_POSITION_TOTAL_SIZE].replace('M', '').replace('G', ''))
@@ -82,6 +100,7 @@ def get_max_value():
 
 
 def get_drive_name():
+    # type: () -> str
     csv_rows = __parse_csv_content(CSV_DISK_FILE)
     for row in csv_rows:
         drive_name = row[CSV_POSITION_DRIVE_NAME]
@@ -90,6 +109,7 @@ def get_drive_name():
 
 
 def __parse_csv_content(csv_file):
+    # type: (str) -> list[object]
     if not os.path.exists(csv_file):
         LOGGER.error("CSV file does not exists! : '{}'".format(csv_file))
     LOGGER.info("Parsing CSV file: '{}'".format(csv_file))
