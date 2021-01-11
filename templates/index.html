@@ -1,0 +1,12 @@
+{% extends "_base_layout.html" %}
+{% block title %}OS-Monitor Home{% endblock %}
+
+{% block body_content %}
+<body>
+    <center>
+        <h1>OS-Monitor</h1>
+        </br>
+        <h3><a href="{{ url_for('disk') }}">Disk Usage</a></h3>
+    </center>
+</body>
+{% endblock %}
