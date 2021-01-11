@@ -25,6 +25,11 @@ LOGGER = logging.getLogger()
 app = Flask(__name__)
 
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
 @app.route('/disk')
 def line_disk_chart():
 
