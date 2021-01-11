@@ -23,4 +23,4 @@ networks:
             config:
                 # use this specific subnet to avoid interfere with company subnet.
                 # The default one is 172.17.x.x and this was used already in company.
-                - subnet:  192.168.123.0/24
+                - subnet:  192.168.125.0/24
