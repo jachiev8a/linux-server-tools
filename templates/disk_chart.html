@@ -41,7 +41,7 @@
 
         <h3>{{ disk_usage_title }}</h3>
 
-        <canvas id="diskUsageChart" width="500" height="400"></canvas>
+        <canvas id="diskUsageChart" width="300" height="400"></canvas>
 
         <script>
             var maxDiskUsage            = {{ disk_total_size }}
@@ -49,7 +49,6 @@
         </script>
 
         <script>
-            //var diskUsageLabelsData = [ "100%", "{{ disk_usage_label }}" ]
             var diskUsageLabelsData = [ "{{ disk_usage_label }}" ]
             var diskUsageDatasetData = [ {{ disk_usage_value }} ]
 
