@@ -31,18 +31,11 @@ handle_error() {
     exit 1
 }
 
-# run script as root
-# ----------------------------------------------------------------------
-if [ "$EUID" -ne 0 ] ; then
-    handle_error "docker-compose is required and it is not installed!"
-fi
-
 # check docker-compose command exists
 # ----------------------------------------------------------------------
-if ! command -v COMMAND &> /dev/null
+if ! command -v docker-compose &> /dev/null
 then
-    handle_error "COMMAND could not be found"
-    exit
+    handle_error "docker-compose is required and it is not installed!"
 fi
 
 # validate arguments parsing
