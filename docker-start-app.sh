@@ -31,13 +31,6 @@ handle_error() {
     exit 1
 }
 
-# check docker-compose command exists
-# ----------------------------------------------------------------------
-if ! command -v docker-compose &> /dev/null
-then
-    handle_error "docker-compose is required and it is not installed!"
-fi
-
 # validate arguments parsing
 # ----------------------------------------------------------------------
 while getopts "h" option; do
@@ -49,6 +42,13 @@ done
 echo "" # new line
 
 echo " > [DOCKER]: Running Docker App as user: '$(whoami)'"
+
+# check docker-compose command exists
+# ----------------------------------------------------------------------
+if ! command -v docker-compose &> /dev/null
+then
+    handle_error "docker-compose is required and it is not installed!"
+fi
 
 # create logs folder (if not exists)
 # ----------------------------------------------------------------------
