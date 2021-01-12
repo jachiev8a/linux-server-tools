@@ -22,13 +22,8 @@ pipeline {
         stage('Deploy App (docker-compose)') {
             steps {
                 script {
-                    if (DOCKER_COMPOSE_EXIT_CODE == 0) {
-                        echo(" > Executing Docker-Compose Up...")
-                        sh("./docker-start-app.sh")
-                    }
-                    else {
-                        error("docker-compose is not installed!")
-                    }
+                    echo(" > Executing Docker-Compose Up...")
+                    sh("./docker-start-app.sh")
                 }
             }
         }
@@ -39,7 +34,7 @@ pipeline {
             emailext(
                 mimeType: 'text/html',
                 subject: "Jenkins Build (No. ${env.BUILD_NUMBER}): - '${env.JOB_NAME}'",
-                to: '${EMAIL_DEFAULT}',
+                to: "${EMAIL_DEFAULT}",
                 body: """
                 <h1>Jenkins: ${env.JOB_NAME} - FAILURE</h1>
                 <table style="background-color:#ff5959; border: 3px solid black; border-radius:6px; padding: 10px; padding-right: 80px; padding-left: 80px;">
