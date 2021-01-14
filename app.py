@@ -15,7 +15,7 @@ from flask import Markup
 from flask import render_template
 
 # custom libs
-import disk_data_manager
+from disk_data_manager import *
 from utils.logging_utils import setup_logger
 
 # main logger instance
@@ -33,7 +33,7 @@ def index():
 @app.route('/disk')
 def line_disk_chart():
 
-    error_msg = disk_data_manager.validate_source_data()
+    error_msg = validate_source_data()
     if error_msg is not None:
         return render_template(
             'errors/error_500.html',
@@ -41,13 +41,10 @@ def line_disk_chart():
         )
 
     # retrieve disk data from CSV
-    date_named_values = disk_data_manager.get_date_named_values()
-    disk_size_values = disk_data_manager.get_current_size_values()
-    disk_in_use_values = disk_data_manager.get_in_use_values()
+    disk = DataDisk('_dev-sdc1.csv')
 
-    last_date_named_value = date_named_values[-1]
-    last_disk_size_value = disk_size_values[-1]
-    last_disk_in_use_value = disk_in_use_values[-1]
+    last_date_named_value = disk.get_last_disk_data_value().date
+    last_disk_in_use_value = disk.get_last_disk_data_value().in_use
 
     disk_usage_label = "{} ({})".format(last_date_named_value, last_disk_in_use_value)
 
@@ -55,12 +52,9 @@ def line_disk_chart():
         'disk_chart.html',
         line_chart_title='Server Disk Usage (Daily)',
         disk_usage_title='Disk Usage (Current)',
-        disk_name=disk_data_manager.get_drive_name(),
-        disk_total_size=disk_data_manager.get_max_value(),
-        line_chart_labels=date_named_values,
-        line_chart_values=disk_size_values,
         disk_usage_label=disk_usage_label,
-        disk_usage_value=last_disk_size_value
+        disk_usage_value=disk.get_last_disk_data_value().size,
+        disk_obj=disk
     )
 
 
