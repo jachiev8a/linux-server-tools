@@ -41,7 +41,7 @@ def line_disk_chart():
         )
 
     # retrieve disk data from CSV
-    disk = DataDisk('_dev-sdc1.csv')
+    disk = DataDisk('/os-monitor/output/_dev-sdc1.csv')
 
     last_date_named_value = disk.get_last_disk_data_value().date
     last_disk_in_use_value = disk.get_last_disk_data_value().in_use
