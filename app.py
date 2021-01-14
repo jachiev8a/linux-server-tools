@@ -82,6 +82,9 @@ def test_error_500():
     return render_template('error_500.html', error_msg=error_msg)
 
 
+# ----------------------------------------------------------------------
+# Main
+# ----------------------------------------------------------------------
 if __name__ == '__main__':
 
     # Script Argument Parser
@@ -101,4 +104,5 @@ if __name__ == '__main__':
         log_file_name=os.path.basename(__file__)
     )
 
+    # flask app run
     app.run(host='0.0.0.0')

@@ -1,0 +1,12 @@
+{
+  "servers": [
+    {
+      "name": "SVAZ-JENK001",
+      "disk": "/dev/sdc1"
+    },
+    {
+      "name": "SVAZ-JENK001",
+      "disk": "/dev/sdc1"
+    }
+  ]
+}

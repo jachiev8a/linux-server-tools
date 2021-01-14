@@ -8,57 +8,55 @@
 
 {% endblock %}
 
-{% block body_content %}
-<body>
-    <center>
-        <h3>{{ line_chart_title }}</h3>
+{% block content %}
+<center>
+    <h3>{{ line_chart_title }}</h3>
 
-        <canvas id="diskLineChart" width="1300" height="620"></canvas>
+    <canvas id="diskLineChart" width="1300" height="620"></canvas>
 
-        <script>
-            var lineDatasetName     = "{{ disk_obj.name }}"
-            var maxYAxisValue       = {{ disk_obj.total_size }}
-            var lineChartSteps      = 11
-        </script>
+    <script>
+        var lineDatasetName     = "{{ disk_obj.name }}"
+        var maxYAxisValue       = {{ disk_obj.total_size }}
+        var lineChartSteps      = 11
+    </script>
 
-        <script>
-            var lineLabelsData =
-            [
-                {% for item in disk_obj.disk_data_values.values() %}
-                    "{{ item.date }}",
-                {% endfor %}
-            ]
-        </script>
+    <script>
+        var lineLabelsData =
+        [
+            {% for item in disk_obj.disk_data_values.values() %}
+                "{{ item.date }}",
+            {% endfor %}
+        ]
+    </script>
 
-        <script>
-            var lineDatasetData =
-            [
-                {% for item in disk_obj.disk_data_values.values() %}
-                    {{ item.size }},
-                {% endfor %}
-            ]
-        </script>
+    <script>
+        var lineDatasetData =
+        [
+            {% for item in disk_obj.disk_data_values.values() %}
+                {{ item.size }},
+            {% endfor %}
+        ]
+    </script>
 
-        <h3>{{ disk_usage_title }}</h3>
+    <h3>{{ disk_usage_title }}</h3>
 
-        <canvas id="diskUsageChart" width="300" height="400"></canvas>
+    <canvas id="diskUsageChart" width="350" height="400"></canvas>
 
-        <script>
-            var maxDiskUsage            = {{ disk_obj.total_size }}
-            var diskUsageSteps          = 6
-        </script>
+    <script>
+        var maxDiskUsage            = {{ disk_obj.total_size }}
+        var diskUsageSteps          = 6
+    </script>
 
-        <script>
-            var diskUsageLabelsData = [ "{{ disk_usage_label }}" ]
-            var diskUsageDatasetData = [ {{ disk_usage_value }} ]
+    <script>
+        var diskUsageLabelsData = [ "{{ disk_usage_label }}" ]
+        var diskUsageDatasetData = [ {{ disk_usage_value }} ]
 
-            var diskTotalLabelsData = [ "Total" ]
-            var diskTotalDatasetData = [ {{ disk_obj.total_size }} ]
-        </script>
+        var diskTotalLabelsData = [ "Total" ]
+        var diskTotalDatasetData = [ {{ disk_obj.total_size }} ]
+    </script>
 
-        <script src="{{url_for('static', filename='js/disk_chart.js')}}" ></script>
+    <script src="{{url_for('static', filename='js/disk_chart.js')}}" ></script>
 
-        <p><a href="{{ url_for('download_file') }}">[Download-File]</a></p>
-    </center>
-</body>
+    <p><a href="{{ url_for('download_file') }}">[Download-File]</a></p>
+</center>
 {% endblock %}
