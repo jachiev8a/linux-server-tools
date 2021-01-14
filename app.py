@@ -74,7 +74,7 @@ def download_file():
         )
 
     # retrieve disk data from CSV
-    return send_file("/os-monitor/output/_dev-sdc1.csv")
+    return send_file("/os-monitor/output/_dev-sdc1.csv", attachment_filename='dev-sdc1.csv')
 
 
 @app.route('/test/error/500')
