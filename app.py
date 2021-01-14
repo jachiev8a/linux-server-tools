@@ -13,6 +13,7 @@ import argparse
 from flask import Flask
 from flask import Markup
 from flask import render_template
+from flask import send_file
 
 # custom libs
 from disk_data_manager import *
@@ -61,6 +62,19 @@ def line_disk_chart():
         TEST_DATA=l,
         disk_obj=disk
     )
+
+
+@app.route('/download')
+def download_file():
+    error_msg = validate_source_data()
+    if error_msg is not None:
+        return render_template(
+            'errors/error_500.html',
+            error_msg=error_msg
+        )
+
+    # retrieve disk data from CSV
+    return send_file("/os-monitor/output/_dev-sdc1.csv")
 
 
 @app.route('/test/error/500')
