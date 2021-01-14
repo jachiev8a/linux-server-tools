@@ -24,8 +24,8 @@
         <script>
             var lineLabelsData =
             [
-                {% for item in TEST_DATA %}
-                    "{{ item.date }}",
+                {% for item in l %}
+                    "{{ item }}",
                 {% endfor %}
             ]
         </script>

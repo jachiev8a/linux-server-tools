@@ -48,13 +48,17 @@ def line_disk_chart():
 
     disk_usage_label = "{} ({})".format(last_date_named_value, last_disk_in_use_value)
 
+    l = []
+    for x in disk.disk_data_values.values():
+        l.append(x.date)
+
     return render_template(
         'disk_chart.html',
         line_chart_title='Server Disk Usage (Daily)',
         disk_usage_title='Disk Usage (Current)',
         disk_usage_label=disk_usage_label,
         disk_usage_value=disk.get_last_disk_data_value().size,
-        TEST_DATA=disk.disk_data_values.values(),
+        TEST_DATA=l,
         disk_obj=disk
     )
 
