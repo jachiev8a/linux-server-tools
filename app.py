@@ -54,6 +54,7 @@ def line_disk_chart():
         disk_usage_title='Disk Usage (Current)',
         disk_usage_label=disk_usage_label,
         disk_usage_value=disk.get_last_disk_data_value().size,
+        TEST_DATA=disk.disk_data_values.values(),
         disk_obj=disk
     )
 
