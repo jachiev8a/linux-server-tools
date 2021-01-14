@@ -16,7 +16,7 @@ OS_MONITOR_OUT_DIR=$OS_MONITOR_DIR/out
 
 OS_MONITOR_MEM_CSV_FILE=$OS_MONITOR_OUT_DIR/_mem-info.csv
 
-DISK_CSV_TITLES="Drive,Total,Used,Available,Use,Mount,Date,Time"
+DISK_CSV_TITLES="Drive,Total,Used,Available,Use,Mount,Date,Time,Hostname,IP"
 
 CLEAN_OUTPUT=false
 
@@ -114,7 +114,8 @@ if [ "$CLEAN_OUTPUT" = true ]; then
     log ""
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         log " > Removing contents from: '$OS_MONITOR_OUT_DIR/*'"
-        rm -rf $OS_MONITOR_OUT_DIR/*
+        # this syntax is for shellcheck: SC2115
+        rm -rf "${OS_MONITOR_OUT_DIR:?}/"*
         log " > Removed! [OK]"
         log ""
     else
@@ -130,6 +131,11 @@ xTIME_FMT=$(date +"%H:%M:%S")
 xDATE=$(date +"%m-%d-%Y")
 xDATE_SUMMARY=$(date +"%b-%d-%Y__%Z")
 DATE_FORMAT="$xDATE""__$xTIME""__$xDATE_SUMMARY"
+
+# Other meta data
+# ----------------------------------------------------------------------
+THIS_IP=$(hostname -i | awk '{print $1}')
+THIS_HOSTNAME=$(hostname)
 
 # get os metadata
 # ----------------------------------------------------------------------
@@ -163,6 +169,7 @@ log "------------------------------------------------------------"
 cat $OS_MONITOR_OUT_DIR/$FILE_NAME_DISK | while read line
 do
     # go trough all drives found inside the disk file
+    # ----------------------------------------------------------------------
     CURRENT_DRIVE=$(echo $line | awk -F " " '{printf("%s", $1)}')
     CURRENT_DRIVE_VALUES=$(echo $line | awk -F " " '{printf("%s,%s,%s,%s,%s,%s", $1,$2,$3,$4,$5,$6)}')
     DRIVE_ID=$(echo $CURRENT_DRIVE | awk -F "/" '{printf("%s-%s", $2, $3)}')
@@ -170,11 +177,17 @@ do
     DRIVE_CSV_FILE_NAME="_$DRIVE_ID.csv"
     
     if [[ ! -f "$OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME" ]]; then
-        # csv file does not exists. generate it.
+        # CSV file does not exists. generate it.
         echo " > [$TOOL_NAME]: Generating '$DRIVE_CSV_FILE_NAME'..."
         echo $DISK_CSV_TITLES >> $OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME
     fi
-    DRIVE_CSV_VALUES="$CURRENT_DRIVE_VALUES,$xDATE,$xTIME_FMT"
+
+    # ----------------------------------------------------------------------
+    # Append ALL CSV values that should be in the generated file.
+    # attach more values / variable in here in case of needed.
+    # ----------------------------------------------------------------------
+    DRIVE_CSV_VALUES="$CURRENT_DRIVE_VALUES,$xDATE,$xTIME_FMT,$THIS_HOSTNAME,$THIS_IP"
+
     log " > Writing values to CSV file: '$DRIVE_CSV_FILE_NAME'"
     log ""
     echo $DRIVE_CSV_VALUES >> $OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME
