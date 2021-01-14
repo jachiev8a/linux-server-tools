@@ -95,13 +95,15 @@ class DataDisk(object):
         self._mounted_path = self._csv_raw_values[0][CSV_POSITION_MOUNTED_PATH]
         LOGGER.debug("Mounted Path retrieved: '{}'".format(self._mounted_path))
 
-        # drive name
+        # CSV DATA: data disk values
         for csv_value in self._csv_raw_values:
 
-            date_raw_value = csv_value[CSV_POSITION_DATE]
-            date_named_value = self._get_named_date_value(date_raw_value)
+            raw_date_value = csv_value[CSV_POSITION_DATE]
+            date_named_value = self._get_named_date_value(raw_date_value)
 
-            size_value = csv_value[CSV_POSITION_CURRENT_SIZE]
+            raw_size_value = csv_value[CSV_POSITION_CURRENT_SIZE]
+            size_value = self._get_valid_size_number_value(raw_size_value)
+
             in_use_value = csv_value[CSV_POSITION_IN_USE_SIZE]
 
             # new disk data value instanced
@@ -110,7 +112,7 @@ class DataDisk(object):
                 size_value,
                 in_use_value
             )
-            self._disk_data_values[date_raw_value] = new_disk_data_value
+            self._disk_data_values[raw_date_value] = new_disk_data_value
 
     def get_last_disk_data_value(self):
         # type: () -> DataDisk.DiskDataValue
