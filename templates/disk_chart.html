@@ -25,7 +25,7 @@
             var lineLabelsData =
             [
                 {% for item in disk_obj.disk_data_values.values() %}
-                    "{{ item.date }}",
+                    "{{% item.date %}}",
                 {% endfor %}
             ]
         </script>
@@ -34,7 +34,7 @@
             var lineDatasetData =
             [
                 {% for item in disk_obj.disk_data_values.values() %}
-                    {{ item.size }},
+                    {{% item.size %}},
                 {% endfor %}
             ]
         </script>
