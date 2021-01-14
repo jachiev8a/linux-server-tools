@@ -54,9 +54,21 @@ class DataDisk(object):
         """"""
 
         def __init__(self, date, size_value, in_use_value):
-            self.date = date,
-            self.size = size_value,
-            self.in_use = in_use_value
+            self._date = date,
+            self._size = size_value,
+            self._in_use = in_use_value
+
+        @property
+        def date(self):
+            return self._date
+
+        @property
+        def size(self):
+            return self._size
+
+        @property
+        def in_use(self):
+            return self._in_use
 
     def __init__(self, csv_file):
         """
