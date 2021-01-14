@@ -11,7 +11,9 @@
 {% block content %}
 <center>
     <br/>
-    <h4>{{ line_chart_title }}</h4>
+    <h3>{{ disk_obj.server.name }} [ {{ disk_obj.server.ip }} ]</h3>
+    <br/>
+    <h5>{{ line_chart_title }}</h5>
 
     <canvas id="diskLineChart" width="1300" height="620"></canvas>
 
@@ -40,7 +42,7 @@
     </script>
 
     <br/>
-    <h4>{{ disk_usage_title }}</h4>
+    <h5>{{ disk_usage_title }}</h5>
 
     <canvas id="diskUsageChart" width="350" height="400"></canvas>
 

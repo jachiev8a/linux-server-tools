@@ -6,6 +6,7 @@ Module disk data manager
 import csv
 import logging
 import os
+import glob
 from collections import OrderedDict
 
 # main logger instance
@@ -17,6 +18,8 @@ CSV_POSITION_CURRENT_SIZE = 2
 CSV_POSITION_IN_USE_SIZE = 4
 CSV_POSITION_MOUNTED_PATH = 5
 CSV_POSITION_DATE = 6
+CSV_POSITION_SERVER_NAME = 7
+CSV_POSITION_SERVER_IP = 8
 
 MONTHS = {
     '01': 'JAN',
@@ -45,6 +48,45 @@ def validate_source_data():
     elif not os.path.exists(CSV_DISK_FILE):
         error_msg = "CSV Source Data file does not exists! ('{}')".format(CSV_DISK_FILE)
     return error_msg
+
+
+class DataDiskManager(object):
+    """"""
+
+    def __init__(self, source_data_path):
+        """"""
+        self._source_data_path = source_data_path
+        self._disks = OrderedDict()
+        self._find_disks()
+
+    def _find_disks(self):
+        # type: () -> None
+        if not os.path.exists(self._source_data_path):
+            error_msg = "Source Data Path does not exist! : '{}'".format(self._source_data_path)
+            LOGGER.error(error_msg)
+            raise Exception(error_msg)
+        LOGGER.info("Looking for source data files: '{}'".format(self._source_data_path))
+
+        glob_source_path = os.path.join(self._source_data_path, '*.csv')
+        for source_file in glob.glob(glob_source_path):
+            LOGGER.debug("Source Data File Found: '{}'".format(source_file))
+            new_disk = DataDisk(source_file)
+            self._disks[new_disk.name] = new_disk
+
+        if not bool(self.disks):
+            error_msg = "Source Data Path does not have files in it: '{}'".format(self._source_data_path)
+            LOGGER.error(error_msg)
+            raise Exception(error_msg)
+
+    @property
+    def disks(self):
+        # type: () -> OrderedDict
+        return self._disks
+
+    @property
+    def source_data_path(self):
+        # type: () -> str
+        return self._source_data_path
 
 
 class DataDisk(object):
@@ -81,6 +123,7 @@ class DataDisk(object):
         self._name = None
         self._total_size = None
         self._mounted_path = None
+        self._server = None
 
         # list of raw values retrieved from csv
         self._csv_raw_values = []
@@ -107,6 +150,12 @@ class DataDisk(object):
         # CSV DATA: mounted path
         self._mounted_path = self._csv_raw_values[0][CSV_POSITION_MOUNTED_PATH]
         LOGGER.debug("Mounted Path retrieved: '{}'".format(self._mounted_path))
+
+        # CSV DATA: server data
+        server_name = self._csv_raw_values[0][CSV_POSITION_SERVER_NAME]
+        server_ip = self._csv_raw_values[0][CSV_POSITION_SERVER_IP]
+        self._server = Server(server_name, server_ip)
+        LOGGER.debug("Server data retrieved: '{}' ({})".format(self._server.name, self._server.ip))
 
         # CSV DATA: data disk values
         for csv_value in self._csv_raw_values:
@@ -142,6 +191,9 @@ class DataDisk(object):
     @staticmethod
     def _get_valid_size_number_value(value):
         # type: (str) -> float
+        """"""
+        # this is set to (1) as default, because if the value is in MB
+        # it is ignored how many MB are there. just rounded to 1GB
         formatted_value = float(1)
         if 'G' in value:
             formatted_value = float(value.replace('M', '').replace('G', ''))
@@ -178,6 +230,28 @@ class DataDisk(object):
         return self._mounted_path
 
     @property
+    def server(self):
+        # type: () -> Server
+        return self._server
+
+    @property
     def disk_data_values(self):
         # type: () -> dict[str, DataDisk.DiskDataValue]
         return self._disk_data_values
+
+
+class Server(object):
+    """"""
+
+    def __init__(self, name, ip_address):
+        """"""
+        self._name = name
+        self._ip_address = ip_address
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def ip(self):
+        return self._ip_address
