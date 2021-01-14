@@ -54,8 +54,9 @@ class DataDisk(object):
         """"""
 
         def __init__(self, date, size_value, in_use_value):
-            self._date = date,
-            self._size = size_value,
+            # type: (str, float, str) -> None
+            self._date = date
+            self._size = size_value
             self._in_use = in_use_value
 
         @property
