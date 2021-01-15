@@ -134,7 +134,7 @@ DATE_FORMAT="$xDATE""__$xTIME""__$xDATE_SUMMARY"
 
 # Other meta data
 # ----------------------------------------------------------------------
-THIS_IP=$(hostname -i | awk '{print $1}')
+THIS_IP=$(ip -br addr show | grep eth0 | awk -F " " '{printf( "%s\n", $3)}' | awk -F "/" '{printf( "%s", $1 )}')
 THIS_HOSTNAME=$(hostname)
 
 # get os metadata
