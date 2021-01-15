@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        label 'DOCKER'
+        node{
+            label 'DOCKER'
+            customWorkspace "${env.JENKINS_HOME}/workspace/server-tools/os-monitor"
+        }
     }
     
     environment {
