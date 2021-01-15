@@ -2,6 +2,7 @@
 
 # import other libraries
 source ./utils/logging_utils.sh
+source ./bin/setenv.sh
 
 # ----------------------------------------------------------------------
 # Script definitions
@@ -10,9 +11,9 @@ source ./utils/logging_utils.sh
 TOOL_NAME="os-monitor"
 TOOLS_USER="servertool"
 
-TOOLS_ROOT_DIR=/opt/linux-server-tools
-OS_MONITOR_DIR=$TOOLS_ROOT_DIR/os-monitor
-OS_MONITOR_OUT_DIR=$OS_MONITOR_DIR/out
+# interface variable [setenv.sh]:
+TOOLS_ROOT_DIR="$SERVER_TOOLS_ROOT_DIR"
+OS_MONITOR_OUT_DIR="$SERVER_TOOLS_OS_MONITOR_OUTPUT"
 
 OS_MONITOR_MEM_CSV_FILE=$OS_MONITOR_OUT_DIR/_mem-info.csv
 
@@ -45,7 +46,7 @@ handle_error() {
 # run script as root
 # ----------------------------------------------------------------------
 if [ "$EUID" -ne 0 ] ; then
-    handle_error "Please run this script as 'root'"
+    handle_error "Please do not run this script as 'root'. Use tool user: '$TOOLS_USER'"
     exit 1
 fi
 
@@ -67,7 +68,7 @@ log "------------------------------------------------------------"
 
 USER_EXISTS_RES=$(grep -c "^$TOOLS_USER:" /etc/passwd)
 
-if [ $USER_EXISTS_RES -eq 0 ]; then
+if [ "$USER_EXISTS_RES" -eq 0 ]; then
     handle_error "User '$TOOLS_USER' does not exist. Please create it."
 else
     log_info " > [$TOOL_NAME]: User '$TOOLS_USER' exists [OK]"
@@ -81,21 +82,15 @@ log "------------------------------------------------------------"
 log ""
 
 # root dir
-if [ ! -d $TOOLS_ROOT_DIR ] ; then
+if [ ! -d "$TOOLS_ROOT_DIR" ] ; then
     log_debug " > [$TOOL_NAME]: Creating main tools directory: $TOOLS_ROOT_DIR"
-    mkdir $TOOLS_ROOT_DIR
-fi
-
-# tool dir
-if [ ! -d $OS_MONITOR_DIR ] ; then
-    log_debug " > [$TOOL_NAME]: Creating tool directory: $OS_MONITOR_DIR"
-    mkdir $OS_MONITOR_DIR
+    mkdir "$TOOLS_ROOT_DIR"
 fi
 
 # tool output dir
-if [ ! -d $OS_MONITOR_OUT_DIR ] ; then
+if [ ! -d "$OS_MONITOR_OUT_DIR" ] ; then
     log_debug " > [$TOOL_NAME]: Creating tool output directory: $OS_MONITOR_OUT_DIR"
-    mkdir $OS_MONITOR_OUT_DIR
+    mkdir "$OS_MONITOR_OUT_DIR"
 fi
 
 log_info " > [$TOOL_NAME]: Directory Structure Successfully created [OK]"
@@ -145,7 +140,7 @@ log "------------------------------------------------------------"
 
 FILE_NAME_DISK="$TOOL_NAME""__disk__""$DATE_FORMAT.txt"
 
-df -h | grep "^/dev/s" > $OS_MONITOR_OUT_DIR/$FILE_NAME_DISK
+df -h | grep "^/dev/s" > "$OS_MONITOR_OUT_DIR"/"$FILE_NAME_DISK"
 
 log_fine " > [$TOOL_NAME]: disk space info to file: '$FILE_NAME_DISK'..."
 log ""
@@ -154,7 +149,7 @@ log "------------------------------------------------------------"
 
 FILE_NAME_MEM="$TOOL_NAME""__mem__""$DATE_FORMAT.txt"
 
-free -ht > $OS_MONITOR_OUT_DIR/$FILE_NAME_MEM
+free -ht > "$OS_MONITOR_OUT_DIR"/"$FILE_NAME_MEM"
 
 log_fine " > [$TOOL_NAME]: memory info to file: '$FILE_NAME_MEM'..."
 log ""
@@ -166,20 +161,20 @@ log ""
 log " > [$TOOL_NAME]: Starting CSV Generation..."
 log "------------------------------------------------------------"
 
-cat $OS_MONITOR_OUT_DIR/$FILE_NAME_DISK | while read line
+cat "$OS_MONITOR_OUT_DIR"/"$FILE_NAME_DISK" | while read -r line
 do
     # go trough all drives found inside the disk file
     # ----------------------------------------------------------------------
-    CURRENT_DRIVE=$(echo $line | awk -F " " '{printf("%s", $1)}')
-    CURRENT_DRIVE_VALUES=$(echo $line | awk -F " " '{printf("%s,%s,%s,%s,%s,%s", $1,$2,$3,$4,$5,$6)}')
-    DRIVE_ID=$(echo $CURRENT_DRIVE | awk -F "/" '{printf("%s-%s", $2, $3)}')
+    CURRENT_DRIVE=$(echo "$line" | awk -F " " '{printf("%s", $1)}')
+    CURRENT_DRIVE_VALUES=$(echo "$line" | awk -F " " '{printf("%s,%s,%s,%s,%s,%s", $1,$2,$3,$4,$5,$6)}')
+    DRIVE_ID=$(echo "$CURRENT_DRIVE" | awk -F "/" '{printf("%s-%s", $2, $3)}')
 
     DRIVE_CSV_FILE_NAME="_$DRIVE_ID.csv"
     
     if [[ ! -f "$OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME" ]]; then
         # CSV file does not exists. generate it.
         echo " > [$TOOL_NAME]: Generating '$DRIVE_CSV_FILE_NAME'..."
-        echo $DISK_CSV_TITLES >> $OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME
+        echo $DISK_CSV_TITLES >> "$OS_MONITOR_OUT_DIR"/"$DRIVE_CSV_FILE_NAME"
     fi
 
     # ----------------------------------------------------------------------
@@ -190,7 +185,7 @@ do
 
     log " > Writing values to CSV file: '$DRIVE_CSV_FILE_NAME'"
     log ""
-    echo $DRIVE_CSV_VALUES >> $OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME
+    echo "$DRIVE_CSV_VALUES" >> "$OS_MONITOR_OUT_DIR"/"$DRIVE_CSV_FILE_NAME"
 done
 log ""
 
@@ -199,7 +194,7 @@ log ""
 log " > [$TOOL_NAME]: Changing Directory permissions to user '$TOOLS_USER'"
 log "------------------------------------------------------------"
 
-chown -R $TOOLS_USER:$TOOLS_USER $TOOLS_ROOT_DIR
+chown -R "$TOOLS_USER":"$TOOLS_USER" "$TOOLS_ROOT_DIR"
 
 log ""
 log_info "==================================================================="

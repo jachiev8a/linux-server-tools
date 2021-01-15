@@ -2,13 +2,15 @@
 
 # import other libraries
 source ./utils/logging_utils.sh
+source ./bin/setenv.sh
 
 # ----------------------------------------------------------------------
 # Script definitions
 # ----------------------------------------------------------------------
 
-# default one used as repo path to deploy
-OS_MONITOR_OUTPUT=/opt/linux-server-tools/os-monitor/out
+# interface variable [setenv.sh]:
+# Default dir used as repo path to deploy
+OS_MONITOR_OUTPUT="$SERVER_TOOLS_OS_MONITOR_OUTPUT"
 
 # usage help use
 # ----------------------------------------------------------------------
