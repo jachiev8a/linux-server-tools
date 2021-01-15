@@ -174,20 +174,21 @@ chown -R "$TOOLS_USER":"$TOOLS_USER" "$TOOLS_ROOT_DIR"
 log " > [$SCRIPT_NAME]: Setup crontab for user '$TOOLS_USER'..."
 log "------------------------------------------------------------"
 
-log " > [$SCRIPT_NAME]: Validate crontab file: '$CRONTAB_USER_FILE'"
-log ""
 # Crontab file exists
 if [ ! -f "$CRONTAB_USER_FILE" ] ; then
+    log_debug " > [$SCRIPT_NAME]: crontab file does not exist. Generating one..."
     log_debug " > [$SCRIPT_NAME]: Generating crontab file: '$CRONTAB_USER_FILE'"
     echo -e "$CRONTAB_HEADER_FILE" > "$CRONTAB_USER_FILE"
     log_info " > [$SCRIPT_NAME]: crontab file successfully generated! [OK]"
 fi
 
+# returns 0 if nothing was found already
 CRONTAB_EXISTS_ALREADY=$( crontab -u "$TOOLS_USER" -l | grep -c "$CRONTAB_SEARCH_KEY")
 
-if [ "$CRONTAB_EXISTS_ALREADY" -ne 0 ]; then
+if [ "$CRONTAB_EXISTS_ALREADY" -eq 0 ]; then
     log_debug " > Adding crontab CMD for user: '$TOOLS_USER'"
     (crontab -u "$TOOLS_USER" -l 2>/dev/null; echo -e "$CRONTAB_STRING") | crontab -
+    log_info " > [$SCRIPT_NAME]: crontab CMD successfully generated! [OK]"
 fi
 
 log ""
