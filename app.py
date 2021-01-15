@@ -66,7 +66,7 @@ def line_disk_chart():
             disk_obj=disk
         )
     except Exception as ex:
-        return redirect(url_for('handle_error', "{}".format(ex)))
+        return redirect(url_for('handle_error'), error_msg="{}".format(ex))
 
 
 @app.route('/download')
@@ -80,7 +80,7 @@ def download_file():
             as_attachment=True
         )
     except Exception as ex:
-        return redirect(url_for('handle_error', error_msg="".format(ex)))
+        return redirect(url_for('handle_error'), error_msg="{}".format(ex))
 
 
 @app.route('/error')
