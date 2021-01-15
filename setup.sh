@@ -105,11 +105,13 @@ if [[ "$USER_EXISTS_RES" -eq 0 ]]; then
     if [ "$RUNNING_RHEL_OS" = true ]; then
         # RHEL: adduser
         log_debug " > Adding user for RHEL OS environment..."
+        log ""
         adduser "$TOOLS_USER"
         log ""
     else
         # UBUNTU: adduser
         log_debug " > Adding user for UBUNTU OS environment..."
+        log ""
         adduser --disabled-password --gecos "" "$TOOLS_USER"
         log ""
     fi
@@ -191,9 +193,9 @@ if [ "$CRONTAB_EXISTS_ALREADY" -eq 0 ]; then
     log_debug " > Adding crontab CMD for user: '$TOOLS_USER'"
     echo -e "$CRONTAB_STRING" >> "$CRONTAB_USER_FILE"
     log_info " > [$SCRIPT_NAME]: crontab CMD successfully generated! [OK]"
-    log_log $DELIMITER
+    log "$DELIMITER"
     log_debug "$( crontab -u "$TOOLS_USER" -l)"
-    log_log $DELIMITER
+    log "$DELIMITER"
 fi
 
 log ""
