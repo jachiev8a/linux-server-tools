@@ -76,7 +76,7 @@ def download_file():
 
 @app.errorhandler(Exception)
 def server_error(err):
-    return render_template('error_500.html', error_msg=err)
+    return render_template('errors/error_500.html', error_msg=err)
 
 
 @app.route('/test/error/500')
