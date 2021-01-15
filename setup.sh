@@ -21,8 +21,8 @@ TOOL_REPO_DIR="$SERVER_TOOLS_REPO_DIR"
 TOOLS_USER="$SERVER_TOOLS_USER"
 # --------------------------------------------------
 
-CRONTAB_COMMENT="# linux-server-tools (os-monitor) contact: javier.ochoa"
-CRONTAB_CMD="0 23 * * *  $SERVER_TOOLS_ROOT_DIR/os-monitor.sh"
+CRONTAB_COMMENT="# linux-server-tools (os-monitor) - [daily 23:00] | contact: javier.ochoa"
+CRONTAB_CMD="0 23 * * *   $TOOLS_ROOT_DIR/os-monitor.sh"
 CRONTAB_STRING="$CRONTAB_COMMENT\n$CRONTAB_CMD"
 
 CRONTAB_SEARCH_KEY="os-monitor.sh"
@@ -70,13 +70,17 @@ log "" # new line
 # ----------------------------------------------------------------------
 log " > [$SCRIPT_NAME]: Validating Tools User '$TOOLS_USER'..."
 log "------------------------------------------------------------"
+log ""
 
 USER_EXISTS_RES=$(grep -c "^$TOOLS_USER:" /etc/passwd)
 
 # if 0 records are found. no user exists.
 if [[ "$USER_EXISTS_RES" -eq 0 ]]; then
-    log_warning " > User '$TOOLS_USER' does not exist!..."
+    log_warning "------------------------------------------------------------"
+    log_warning " > [$SCRIPT_NAME]: User '$TOOLS_USER' does not exist!..."
+    log_warning "------------------------------------------------------------"
     log " > Trying to create user: '$TOOLS_USER'"
+    log ""
 
     # os validation
     # ----------------------------------------------------------------------
@@ -169,7 +173,7 @@ log "------------------------------------------------------------"
 CRONTAB_EXISTS_ALREADY=$( crontab -u "$TOOLS_USER" -l | grep -c "$CRONTAB_SEARCH_KEY")
 
 if [ "$CRONTAB_EXISTS_ALREADY" -ne 0 ]; then
-    log_debug " > Adding crontab CMD for user '$TOOLS_USER'"
+    log_debug " > Adding crontab CMD for user: '$TOOLS_USER'"
     (crontab -u "$TOOLS_USER" -l 2>/dev/null; echo "$CRONTAB_STRING") | crontab -
 fi
 
