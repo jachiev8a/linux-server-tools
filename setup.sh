@@ -13,6 +13,8 @@ RUNNING_RHEL_OS=true
 
 # interface variables [setenv.sh]:
 # --------------------------------------------------
+# server tools root dir
+TOOLS_ROOT_DIR="$SERVER_TOOLS_ROOT_DIR"
 # destination directory for the repository
 TOOL_REPO_DIR="$SERVER_TOOLS_REPO_DIR"
 # tools user used
@@ -94,12 +96,12 @@ if [[ "$USER_EXISTS_RES" -eq 0 ]]; then
     if [ "$RUNNING_RHEL_OS" = true ]; then
         # RHEL: adduser
         log_debug " > Adding user for RHEL OS environment..."
-        adduser --no-create-home "$TOOLS_USER"
+        adduser "$TOOLS_USER"
         log ""
     else
         # UBUNTU: adduser
         log_debug " > Adding user for UBUNTU OS environment..."
-        adduser --no-create-home --disabled-password --gecos "" "$TOOLS_USER"
+        adduser --disabled-password --gecos "" "$TOOLS_USER"
         log ""
     fi
 else
@@ -139,6 +141,8 @@ if [ "$JENKINS_USER_EXISTS_RES" -ne 0 ]; then
     # jenkins user exists
     log_debug " > Adding jenkins user '$JENKINS_USER' to tools user-group '$TOOLS_USER'"
     usermod -a -G "$TOOLS_USER" "$JENKINS_USER"
+else
+    log " > jenkins user does not exist. Nothing to do!"
 fi
 
 # copy repository to directory destination
