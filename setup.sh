@@ -11,9 +11,13 @@ source ./bin/setenv.sh
 SCRIPT_NAME="Setup"
 RUNNING_RHEL_OS=true
 
-# interface variable [setenv.sh]:
+# interface variables [setenv.sh]:
+# --------------------------------------------------
 # destination directory for the repository
 TOOL_REPO_DIR="$SERVER_TOOLS_REPO_DIR"
+# tools user used
+TOOLS_USER="$SERVER_TOOLS_USER"
+# --------------------------------------------------
 
 CRONTAB_COMMENT="# linux-server-tools (os-monitor) contact: javier.ochoa"
 CRONTAB_CMD="0 23 * * *  $SERVER_TOOLS_ROOT_DIR/os-monitor.sh"
@@ -62,24 +66,25 @@ log "" # new line
 
 # user validation
 # ----------------------------------------------------------------------
-log " > [$SCRIPT_NAME]: Validating Tools User '$SERVER_TOOLS_USER'..."
+log " > [$SCRIPT_NAME]: Validating Tools User '$TOOLS_USER'..."
 log "------------------------------------------------------------"
 
-USER_EXISTS_RES=$(grep -c "^$SERVER_TOOLS_USER:" /etc/passwd)
+USER_EXISTS_RES=$(grep -c "^$TOOLS_USER:" /etc/passwd)
 
-if [ "$USER_EXISTS_RES" -eq 0 ]; then
-    log_warning "User '$SERVER_TOOLS_USER' does not exist!..."
-    log "Trying to create user: '$SERVER_TOOLS_USER'"
+# if 0 records are found. no user exists.
+if [[ "$USER_EXISTS_RES" -eq 0 ]]; then
+    log_warning " > User '$TOOLS_USER' does not exist!..."
+    log " > Trying to create user: '$TOOLS_USER'"
 
     # os validation
     # ----------------------------------------------------------------------
     log " > [$SCRIPT_NAME]: Validating Running OS..."
     log "------------------------------------------------------------"
 
-    RUNNING_RHEL_CMD=$(grep -i 'red hat\|rhel' /etc/os-release)
+    RUNNING_RHEL_CMD=$(grep -c -i 'red hat\|rhel' /etc/os-release)
 
     if [ "$RUNNING_RHEL_CMD" -eq 0 ]; then
-        log_debug " > Not running in RHEL OS..."
+        log_debug " > NOT running in RHEL OS environment..."
         log ""
         RUNNING_RHEL_OS=false
     fi
@@ -88,12 +93,14 @@ if [ "$USER_EXISTS_RES" -eq 0 ]; then
     # ----------------------------------------------------------------------
     if [ "$RUNNING_RHEL_OS" = true ]; then
         # RHEL: adduser
-        log_debug " > Adding user in RHEL..."
-        adduser --no-create-home "$SERVER_TOOLS_USER"
+        log_debug " > Adding user for RHEL OS environment..."
+        adduser --no-create-home "$TOOLS_USER"
+        log ""
     else
         # UBUNTU: adduser
-        log_debug " > Adding user in UBUNTU..."
-        adduser --no-create-home --disabled-password --gecos "" "$SERVER_TOOLS_USER"
+        log_debug " > Adding user for UBUNTU OS environment..."
+        adduser --no-create-home --disabled-password --gecos "" "$TOOLS_USER"
+        log ""
     fi
 else
     log_info " > [$SCRIPT_NAME]: User '$TOOLS_USER' exists [OK]"
@@ -123,7 +130,7 @@ log ""
 
 # jenkins user validation
 # ----------------------------------------------------------------------
-log " > [$TOOL_NAME]: Validating Jenkins user: '$JENKINS_USER'..."
+log " > [$SCRIPT_NAME]: Validating Jenkins user: '$JENKINS_USER'..."
 log "------------------------------------------------------------"
 
 JENKINS_USER_EXISTS_RES=$(grep -c "^$JENKINS_USER:" /etc/passwd)
@@ -136,10 +143,12 @@ fi
 
 # copy repository to directory destination
 # ----------------------------------------------------------------------
-log " > [$TOOL_NAME]: rsync this repository to: $TOOL_REPO_DIR"
+log " > [$SCRIPT_NAME]: rsync this repository to: $TOOL_REPO_DIR"
 log "------------------------------------------------------------"
 
-rsync -av
+log_debug " > running rsync: '$(pwd -P)' -> '$TOOL_REPO_DIR'"
+log ""
+rsync -avr --progress "$(pwd -P)" "$TOOL_REPO_DIR"
 
 # Change Directory permissions
 # ----------------------------------------------------------------------
@@ -150,7 +159,7 @@ chown -R "$TOOLS_USER":"$TOOLS_USER" "$TOOLS_ROOT_DIR"
 
 # Crontab setup
 # ----------------------------------------------------------------------
-log " > [$TOOL_NAME]: Setup Crontab for user '$TOOLS_USER'..."
+log " > [$SCRIPT_NAME]: Setup Crontab for user '$TOOLS_USER'..."
 log "------------------------------------------------------------"
 
 CRONTAB_EXISTS_ALREADY=$( crontab -u "$TOOLS_USER" -l | grep -c "$CRONTAB_SEARCH_KEY")
