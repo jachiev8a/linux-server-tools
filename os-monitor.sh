@@ -8,8 +8,11 @@ source ./bin/setenv.sh
 # Script definitions
 # ----------------------------------------------------------------------
 
-TOOL_NAME="os-monitor"
-TOOLS_USER="servertool"
+filename=$( basename -- "$0" )
+SCRIPT_NAME="${filename%.*}"
+
+TOOL_NAME="$SCRIPT_NAME"
+TOOLS_USER="$SERVER_TOOLS_USER"
 
 # interface variable [setenv.sh]:
 TOOLS_ROOT_DIR="$SERVER_TOOLS_ROOT_DIR"
@@ -24,7 +27,7 @@ CLEAN_OUTPUT=false
 # usage help use
 # ----------------------------------------------------------------------
 usage() {
-    log_info "\n--- [$TOOL_NAME]: docker-start-app.sh ---\n"
+    log_info "\n--- [$TOOL_NAME]: $SCRIPT_NAME.sh ---\n"
     log "Usage:\n"
     log ""
     exit 0
@@ -45,7 +48,7 @@ handle_error() {
 
 # run script as root
 # ----------------------------------------------------------------------
-if [ "$EUID" -ne 0 ] ; then
+if [ "$EUID" -eq 0 ] ; then
     handle_error "Please do not run this script as 'root'. Use tool user: '$TOOLS_USER'"
     exit 1
 fi

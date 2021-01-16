@@ -174,8 +174,10 @@ log "------------------------------------------------------------"
 
 DIR_TO_RSYNC="$(pwd -P)/"
 log_debug " > running rsync: '$DIR_TO_RSYNC' -> '$TOOL_REPO_DIR'"
+
 log ""
 rsync -avr --info=progress2 --info=name0 --stats "$DIR_TO_RSYNC" "$TOOL_REPO_DIR"
+log ""
 
 # Change Directory permissions
 # ----------------------------------------------------------------------
@@ -207,6 +209,8 @@ if [ "$CRONTAB_EXISTS_ALREADY" -eq 0 ]; then
     log "------------------------------------------------------------"
     log_debug "$( cat "$CRONTAB_USER_FILE")"
     log "------------------------------------------------------------"
+else
+    log "crontab already set. Nothing to do!"
 fi
 
 log ""
