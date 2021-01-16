@@ -46,7 +46,7 @@ def line_disk_chart():
     # get disk manager singleton
     disk_manager = get_disk_manager()
 
-    if '/dev/sdb1' in disk_manager.disks.keys():
+    if '/dev/sdc1' in disk_manager.disks.keys():
         disk = disk_manager.disks['/dev/sdb1']
     else:
         disk = list(disk_manager.disks.values())[0]
