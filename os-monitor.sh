@@ -14,9 +14,12 @@ SCRIPT_NAME="${filename%.*}"
 TOOL_NAME="$SCRIPT_NAME"
 TOOLS_USER="$SERVER_TOOLS_USER"
 
-# interface variable [setenv.sh]:
+# interface variables [setenv.sh]:
+# --------------------------------------------------
 TOOLS_ROOT_DIR="$SERVER_TOOLS_ROOT_DIR"
+OS_MONITOR_ROOT_DIR="$SERVER_TOOLS_OS_MONITOR_ROOT"
 OS_MONITOR_OUT_DIR="$SERVER_TOOLS_OS_MONITOR_OUTPUT"
+
 
 OS_MONITOR_MEM_CSV_FILE=$OS_MONITOR_OUT_DIR/_mem-info.csv
 
@@ -53,7 +56,7 @@ if [ "$EUID" -eq 0 ] ; then
     exit 1
 fi
 
-log_info " > running script as user: $(whoami)"
+log_info " > running script as user: '$(whoami)'"
 
 # validate arguments parsing
 # ----------------------------------------------------------------------
@@ -90,12 +93,27 @@ log ""
 if [ ! -d "$TOOLS_ROOT_DIR" ] ; then
     log_debug " > [$TOOL_NAME]: Creating main tools directory: $TOOLS_ROOT_DIR"
     mkdir "$TOOLS_ROOT_DIR"
+    if [ ! -d "$TOOLS_ROOT_DIR" ]; then
+        handle_error " > mkdir error: '$TOOLS_ROOT_DIR' "
+    fi
+fi
+
+# this tool root dir
+if [ ! -d "$OS_MONITOR_ROOT_DIR" ] ; then
+    log_debug " > [$TOOL_NAME]: Creating this tool directory: $OS_MONITOR_ROOT_DIR"
+    mkdir "$OS_MONITOR_ROOT_DIR"
+    if [ ! -d "$OS_MONITOR_ROOT_DIR" ]; then
+        handle_error " > mkdir error: '$OS_MONITOR_ROOT_DIR' "
+    fi
 fi
 
 # tool output dir
 if [ ! -d "$OS_MONITOR_OUT_DIR" ] ; then
     log_debug " > [$TOOL_NAME]: Creating tool output directory: $OS_MONITOR_OUT_DIR"
     mkdir "$OS_MONITOR_OUT_DIR"
+    if [ ! -d "$OS_MONITOR_OUT_DIR" ]; then
+        handle_error " > mkdir error: '$OS_MONITOR_OUT_DIR' "
+    fi
 fi
 
 log_info " > [$TOOL_NAME]: Directory Structure Successfully created [OK]"
