@@ -28,7 +28,7 @@ TOOLS_LOGS_DIR="$SERVER_TOOLS_LOGS_DIR"
 DELIMITER="# ------------------------------------------------------------"
 
 CRONTAB_COMMENT="# linux-server-tools (os-monitor) - [daily 23:00] | contact: javier.ochoa"
-CRONTAB_CMD="0 23 * * *  $TOOLS_USER /bin/bash $TOOLS_ROOT_DIR/os-monitor.sh >> $TOOLS_LOGS_DIR/os-monitor.log"
+CRONTAB_CMD="0 23 * * *  $TOOLS_USER /bin/bash -c \"$TOOLS_ROOT_DIR/os-monitor.sh\" >> $TOOLS_LOGS_DIR/os-monitor.log"
 CRONTAB_STRING="$CRONTAB_COMMENT\n$DELIMITER\n$CRONTAB_CMD\n"
 
 CRONTAB_USER_FILE="/etc/cron.d/$TOOLS_USER"
