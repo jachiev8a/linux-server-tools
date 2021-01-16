@@ -46,7 +46,10 @@ def line_disk_chart():
     # get disk manager singleton
     disk_manager = get_disk_manager()
 
-    disk = disk_manager.disks['/dev/sda1']
+    if '/dev/sdb1' in disk_manager.disks.keys():
+        disk = disk_manager.disks['/dev/sdb1']
+    else:
+        disk = list(disk_manager.disks.values())[0]
 
     last_date_named_value = disk.get_last_disk_data_value().date
     last_disk_in_use_value = disk.get_last_disk_data_value().in_use
