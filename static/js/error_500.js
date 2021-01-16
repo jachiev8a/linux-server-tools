@@ -1,5 +1,5 @@
 $(function() {
   setTimeout(function(){
-    $('body').removeClass('loading');
+    $('div').removeClass('loading');
   }, 1000);
 });
