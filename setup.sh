@@ -25,7 +25,7 @@ TOOLS_USER="$SERVER_TOOLS_USER"
 TOOLS_LOGS_DIR="$SERVER_TOOLS_LOGS_DIR"
 # --------------------------------------------------
 
-DELIMITER="------------------------------------------------------------"
+DELIMITER="# ------------------------------------------------------------"
 
 CRONTAB_COMMENT="# linux-server-tools (os-monitor) - [daily 23:00] | contact: javier.ochoa"
 CRONTAB_CMD="0 23 * * *  $TOOLS_USER /bin/bash $TOOLS_ROOT_DIR/os-monitor.sh >> $TOOLS_LOGS_DIR/$SCRIPT_NAME.log"
@@ -204,9 +204,9 @@ if [ "$CRONTAB_EXISTS_ALREADY" -eq 0 ]; then
     log_debug " > Adding crontab CMD for user: '$TOOLS_USER'"
     echo -e "$CRONTAB_STRING" >> "$CRONTAB_USER_FILE"
     log_info " > [$SCRIPT_NAME]: crontab CMD successfully generated! [OK]"
-    log "$DELIMITER"
-    log_debug "$( crontab -u "$TOOLS_USER" -l)"
-    log "$DELIMITER"
+    log "------------------------------------------------------------"
+    log_debug "$( cat "$CRONTAB_USER_FILE")"
+    log "------------------------------------------------------------"
 fi
 
 log ""
