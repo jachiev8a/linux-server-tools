@@ -53,6 +53,8 @@ if [ "$EUID" -eq 0 ] ; then
     exit 1
 fi
 
+log_info " > running script as user: $(whoami)"
+
 # validate arguments parsing
 # ----------------------------------------------------------------------
 while getopts "hc" option; do

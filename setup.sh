@@ -210,7 +210,7 @@ if [ "$CRONTAB_EXISTS_ALREADY" -eq 0 ]; then
     log_debug "$( cat "$CRONTAB_USER_FILE")"
     log "------------------------------------------------------------"
 else
-    log "crontab already set. Nothing to do!"
+    log " > crontab already set. Nothing to do!"
 fi
 
 log ""
