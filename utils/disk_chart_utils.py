@@ -17,7 +17,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 BG_COLORS = [
-    "'rgba(151, 187, 205, 0.2)'",     # Light Blue
+    "rgba(151, 187, 205, 0.2)",     # Light Blue
     "#EE8585"                      # Light Red
 ]
 
