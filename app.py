@@ -66,7 +66,7 @@ def line_disk_chart():
 
 
 @app.route('/test')
-def line_disk_chart():
+def test():
     # get disk manager singleton
     disk_manager = get_disk_manager()
 
