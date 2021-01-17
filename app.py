@@ -105,8 +105,11 @@ def download_file():
 
 @app.errorhandler(Exception)
 def server_error(err):
-    print(traceback.format_exc())
-    return render_template('errors/error_500.html', error_msg=err)
+    return render_template(
+        'errors/error_500.html',
+        error_msg=err,
+        trace=traceback.format_exc()
+    )
 
 
 @app.route('/test/error/500')
