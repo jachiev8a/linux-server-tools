@@ -6,6 +6,7 @@ Main script to manage swarm api with several utils
 
 # core libs
 import argparse
+import traceback
 
 # flask libs
 from flask import Flask
@@ -104,6 +105,7 @@ def download_file():
 
 @app.errorhandler(Exception)
 def server_error(err):
+    print(traceback.format_exc())
     return render_template('errors/error_500.html', error_msg=err)
 
 
