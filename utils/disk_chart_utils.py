@@ -18,32 +18,32 @@ LOGGER = logging.getLogger(__name__)
 
 BG_COLORS = [
     "rgba(151, 187, 205, 0.2)",     # Light Blue
-    "#EE8585",                      # Light Red
+    "#EE8585"                      # Light Red
 ]
 
 BORDER_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585",                      # Light Red
+    "#EE8585"                      # Light Red
 ]
 
 POINT_BG_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585",                      # Light Red
+    "#EE8585"                      # Light Red
 ]
 
 POINT_BORDER_COLORS = [
     "#fff",                         # Black
-    "#fff",                         # Black
+    "#fff"                         # Black
 ]
 
 POINT_HOVER_BG_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585",                      # Light Red
+    "#EE8585"                      # Light Red
 ]
 
 POINT_HOVER_BORDER_COLORS = [
     "#fff",                         # Black
-    "#fff",                         # Black
+    "#fff"                         # Black
 ]
 
 BORDER_WIDTH = 4
@@ -121,12 +121,12 @@ class ChartJsDataset(object):
 
         definition = {
             'label': self._label,
-            'backgroundColor': BG_COLORS.pop(),
-            'borderColor': BORDER_COLORS.pop(),
-            'pointBackgroundColor': POINT_BG_COLORS.pop(),
-            'pointBorderColor': POINT_BORDER_COLORS.pop(),
-            'pointHoverBackgroundColor': POINT_HOVER_BG_COLORS.pop(),
-            'pointHoverBorderColor': POINT_HOVER_BORDER_COLORS.pop(),
+            'backgroundColor': BG_COLORS[0],
+            'borderColor': BORDER_COLORS[0],
+            'pointBackgroundColor': POINT_BG_COLORS[0],
+            'pointBorderColor': POINT_BORDER_COLORS[0],
+            'pointHoverBackgroundColor': POINT_HOVER_BG_COLORS[0],
+            'pointHoverBorderColor': POINT_HOVER_BORDER_COLORS[0],
             'borderWidth': BORDER_WIDTH,
             'data': self._data_placeholder,
         }
