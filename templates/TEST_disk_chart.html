@@ -20,7 +20,7 @@
     <script>
         {% for disk in chart_manager.disk_charts.values() %}
             {% for k, v in disk.dataset.definition.items() %}
-                {{ k }}: '{{ v }}',
+                {{ k }}: {{ v }},
             {% endfor %}
         {% endfor %}
     </script>

@@ -17,33 +17,33 @@ LOGGER = logging.getLogger(__name__)
 
 
 BG_COLORS = [
-    "rgba(151, 187, 205, 0.2)",     # Light Blue
-    "#EE8585"                      # Light Red
+    "\"rgba(151, 187, 205, 0.2)\"",     # Light Blue
+    "\"#EE8585\""                      # Light Red
 ]
 
 BORDER_COLORS = [
-    "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585"                      # Light Red
+    "\"rgba(151, 187, 205, 1)\"",       # Light Blue
+    "\"#EE8585\""                      # Light Red
 ]
 
 POINT_BG_COLORS = [
-    "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585"                      # Light Red
+    "\"rgba(151, 187, 205, 1)\"",       # Light Blue
+    "\"#EE8585\""                      # Light Red
 ]
 
 POINT_BORDER_COLORS = [
-    "#fff",                         # Black
-    "#fff"                         # Black
+    "\"#fff\"",                         # Black
+    "\"#fff\""                         # Black
 ]
 
 POINT_HOVER_BG_COLORS = [
-    "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585"                      # Light Red
+    "\"rgba(151, 187, 205, 1)\"",       # Light Blue
+    "\"#EE8585\""                      # Light Red
 ]
 
 POINT_HOVER_BORDER_COLORS = [
-    "#fff",                         # Black
-    "#fff"                         # Black
+    "\"#fff\"",                         # Black
+    "\"#fff\""                         # Black
 ]
 
 BORDER_WIDTH = 4
@@ -112,7 +112,7 @@ class ChartJsDataset(object):
 
     def __init__(self, label_name, uid_data):
         """"""
-        self._label = label_name
+        self._label = "\"{}\"".format(label_name)
         self._uid_data = uid_data
         self._data_placeholder = "data_placeholder{}".format(self._uid_data)
         self._definition = self._build_dataset()
