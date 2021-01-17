@@ -20,11 +20,11 @@
     <script>
         {%- for disk in chart_manager.disk_charts.values() -%}
             {%- for k, v in disk.dataset.definition.items() -%}
-                {%- if v is number -%}
+                {% if v is number %}
                     {{ k }}: {{ v }},
-                {%- else -%}
+                {% else %}
                     {{ k }}: '{{ v }}',
-                {%- endif -%}
+                {% endif %}
             {%- endfor -%}
         {%- endfor -%}
     </script>
