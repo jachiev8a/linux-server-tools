@@ -121,6 +121,7 @@ class DataDisk(object):
         self._csv_file = csv_file
 
         # static non-changeable values
+        self._uid = None
         self._name = None
         self._total_size = None
         self._mounted_path = None
@@ -177,6 +178,10 @@ class DataDisk(object):
             )
             self._disk_data_values[raw_date_value] = new_disk_data_value
 
+        # Unique ID setup
+        # it is the same as name, but with underscores: '_'
+        self._uid = self._name.replace('/', '_')
+
     def get_last_disk_data_value(self):
         # type: () -> DataDisk.DiskDataValue
         return list(self.disk_data_values.values())[-1]
@@ -217,6 +222,10 @@ class DataDisk(object):
                     LOGGER.debug("CSV row parsed: '{}'".format(row))
                     value_rows.append(row)
         return value_rows
+
+    @property
+    def uid(self):
+        return self._uid
 
     @property
     def name(self):

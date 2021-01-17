@@ -5,8 +5,6 @@ Main script to manage swarm api with several utils
 """
 
 # core libs
-import logging
-import os
 import argparse
 
 # flask libs
@@ -15,7 +13,8 @@ from flask import render_template
 from flask import send_file
 
 # custom libs
-from disk_data_manager import *
+from utils.disk_data_manager import *
+from utils.disk_chart_utils import *
 from utils.logging_utils import setup_logger
 
 # main logger instance
@@ -63,6 +62,32 @@ def line_disk_chart():
         disk_usage_label=disk_usage_label,
         disk_usage_value=disk.get_last_disk_data_value().size,
         disk_obj=disk
+    )
+
+
+@app.route('/test')
+def line_disk_chart():
+    # get disk manager singleton
+    disk_manager = get_disk_manager()
+
+    if '/dev/sdc1' in disk_manager.disks.keys():
+        disk = disk_manager.disks['/dev/sdb1']
+    else:
+        disk = list(disk_manager.disks.values())[0]
+
+    last_date_named_value = disk.get_last_disk_data_value().date
+    last_disk_in_use_value = disk.get_last_disk_data_value().in_use
+
+    disk_usage_label = "{} ({})".format(last_date_named_value, last_disk_in_use_value)
+
+    disk_chart_manager = DiskChartJsManager()
+    disk_chart_manager.load_disk(disk)
+
+    return render_template(
+        'TEST_disk_chart.html',
+        line_chart_title='Server Disk Usage (Daily)',
+        disk_usage_title='Disk Usage (Current)',
+        chart_manager=disk_chart_manager
     )
 
 

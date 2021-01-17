@@ -1,0 +1,48 @@
+{% extends "_base_layout.html" %}
+{% block title %}Disk Usage Chart{% endblock %}
+{% block head %}
+    {{ super() }}
+
+    <!-- Override the javascript code needed for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+{% endblock %}
+
+{% block content %}
+<center>
+    <br/>
+    <h3>{{ disk_obj.server.name }} - <b>[</b><span class="disk-ip">{{ disk_obj.server.ip }}</span><b>]</b></h3>
+    <br/>
+    <h5>{{ line_chart_title }}</h5>
+
+    <canvas id="diskLineChart" width="1300" height="620"></canvas>
+
+    <script>
+        {% for disk in chart_manager.disk_charts.values() %}
+            {{ disk.dataset.definition }}
+        {% endfor %}
+    </script>
+
+    <br/>
+    <h5>{{ disk_usage_title }}</h5>
+
+    <canvas id="diskUsageChart" width="350" height="400"></canvas>
+
+    <script>
+        var maxDiskUsage            = {{ disk_obj.total_size }}
+        var diskUsageSteps          = 6
+    </script>
+
+    <script>
+        var diskUsageLabelsData = [ "{{ disk_usage_label }}" ]
+        var diskUsageDatasetData = [ {{ disk_usage_value }} ]
+
+        var diskTotalLabelsData = [ "Total" ]
+        var diskTotalDatasetData = [ {{ disk_obj.total_size }} ]
+    </script>
+
+    <script src="{{url_for('static', filename='js/TEST_disk_chart.js')}}" ></script>
+
+    <p><a href="{{ url_for('download_file') }}">[Download-File]</a></p>
+</center>
+{% endblock %}
