@@ -28,6 +28,7 @@
 
     <canvas id="diskUsageChart" width="350" height="400"></canvas>
 
+    <!--
     <script>
         var maxDiskUsage            = {{ disk_obj.total_size }}
         var diskUsageSteps          = 6
@@ -40,6 +41,7 @@
         var diskTotalLabelsData = [ "Total" ]
         var diskTotalDatasetData = [ {{ disk_obj.total_size }} ]
     </script>
+    -->
 
     <script src="{{url_for('static', filename='js/TEST_disk_chart.js')}}" ></script>
 
