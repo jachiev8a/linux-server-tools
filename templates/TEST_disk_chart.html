@@ -26,23 +26,6 @@
     <br/>
     <h5>{{ disk_usage_title }}</h5>
 
-    <canvas id="diskUsageChart" width="350" height="400"></canvas>
-
-    <!--
-    <script>
-        var maxDiskUsage            = {{ disk_obj.total_size }}
-        var diskUsageSteps          = 6
-    </script>
-
-    <script>
-        var diskUsageLabelsData = [ "{{ disk_usage_label }}" ]
-        var diskUsageDatasetData = [ {{ disk_usage_value }} ]
-
-        var diskTotalLabelsData = [ "Total" ]
-        var diskTotalDatasetData = [ {{ disk_obj.total_size }} ]
-    </script>
-    -->
-
     <script src="{{url_for('static', filename='js/TEST_disk_chart.js')}}" ></script>
 
     <p><a href="{{ url_for('download_file') }}">[Download-File]</a></p>
