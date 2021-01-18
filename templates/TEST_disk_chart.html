@@ -18,15 +18,19 @@
     <canvas id="diskLineChart" width="1300" height="620"></canvas>
 
     <script>
+        datasets: [
         {%- for disk in chart_manager.disk_charts.values() -%}
+            {
             {%- for k, v in disk.dataset.definition.items() -%}
-                {% if v.is_quoted %}
+                {%- if v.is_quoted() -%}
                     {{ k }}: '{{ v }}',
                 {% else %}
                     {{ k }}: {{ v }},
                 {% endif %}
             {%- endfor -%}
+            },
         {%- endfor -%}
+        ]
     </script>
 
     <br/>
