@@ -2,11 +2,22 @@
   "servers": [
     {
       "name": "SVAZ-JENK001",
-      "disk": "/dev/sdc1"
+      "disks": [
+        "root"
+      ]
     },
     {
-      "name": "SVAZ-JENK001",
-      "disk": "/dev/sdc1"
+      "name": "SVAZ-JIRA",
+      "disks": [
+        "root"
+      ]
+    },
+    {
+      "name": "AZLXD-AGOSEN01",
+      "disks": [
+        "root",
+        "/dev/sda1"
+      ]
     }
   ]
 }

@@ -7,6 +7,7 @@ import csv
 import logging
 import os
 import glob
+import json
 from typing import *
 from collections import OrderedDict
 
@@ -42,10 +43,13 @@ MONTHS = {
 class DataDiskManager(object):
     """"""
 
-    def __init__(self, source_data_path):
+    def __init__(self, source_data_path, disk_config_file):
+        # type: (str, str) -> None
         """"""
         self._source_data_path = source_data_path
+        self._server_disk_config = ServerDiskConfig(disk_config_file)
         self._disks = OrderedDict()  # type: Dict[str, DataDisk]
+
         self._find_disks()
 
     def _find_disks(self):
@@ -278,6 +282,55 @@ class Server(object):
         """"""
         self._name = name
         self._ip_address = ip_address
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def ip(self):
+        return self._ip_address
+
+
+class ServerDiskConfig(object):
+    """"""
+
+    class ServerDiskObject(object):
+        """"""
+
+        def __init__(self, server_name, disks):
+            # type: (str, list) -> None
+            self._name = server_name  # type: str
+            self._disks = disks  # type: list
+
+        @property
+        def name(self):
+            # type: () -> str
+            return self._name
+
+        @property
+        def disk_names(self):
+            # type: () -> str
+            return self._name
+
+    def __init__(self, config_file_path):
+        """"""
+        self._servers = []
+        self._config_file_path = config_file_path
+        self._configuration = self._read_config_file()
+        self._parse_configuration()
+
+    def _read_config_file(self):
+        # type: () -> dict
+        with open(self._config_file_path) as file_obj:
+            json_config = json.load(file_obj)
+        return json_config
+
+    def _parse_configuration(self):
+        # type: () -> dict
+        for server in self._configuration['servers']:
+
+
 
     @property
     def name(self):

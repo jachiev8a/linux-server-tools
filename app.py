@@ -32,7 +32,7 @@ def get_disk_manager():
     # type: () -> DataDiskManager
     global DATA_DISK_MANAGER
     if DATA_DISK_MANAGER is None:
-        DATA_DISK_MANAGER = DataDiskManager('/os-monitor/output/')
+        DATA_DISK_MANAGER = DataDiskManager('/os-monitor/output/', './disk-config.json')
     return DATA_DISK_MANAGER
 
 
