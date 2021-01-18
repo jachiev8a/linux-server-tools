@@ -37,19 +37,6 @@ MONTHS = {
     '12': 'DEC'
 }
 
-CSV_FILES_PATH = "/os-monitor/output"
-CSV_DISK_FILE = os.path.join(CSV_FILES_PATH, '_dev-sdc1.csv')
-
-
-def validate_source_data():
-    # type: () -> str
-    error_msg = None
-    if not os.path.exists(CSV_FILES_PATH):
-        error_msg = "Source Data Path does not exists! ('{}')".format(CSV_FILES_PATH)
-    elif not os.path.exists(CSV_DISK_FILE):
-        error_msg = "CSV Source Data file does not exists! ('{}')".format(CSV_DISK_FILE)
-    return error_msg
-
 
 class DataDiskManager(object):
     """"""

@@ -18,9 +18,9 @@ LOGGER = logging.getLogger(__name__)
 
 
 BG_COLORS = [
-    "rgba(151, 187, 205, 0.4)",     # Light Blue
-    "rgba(238, 133, 133, 0.4)",     # Light Red
-    "rgba(187, 143, 206, 0.4)",     # dark purple
+    "rgba(151, 187, 205, 0.3)",     # Light Blue
+    "rgba(238, 133, 133, 0.3)",     # Light Red
+    "rgba(187, 143, 206, 0.3)",     # dark purple
 ]
 
 BORDER_COLORS = [
@@ -121,11 +121,23 @@ class DiskChartJs(object):
 
     def _abstract_disk_data(self, disk):
         # type: (DataDisk) -> None
+        """Retrieve metadata from disk object (DataDisk) in order to build
+        the metadata for a Disk ChartJs Object (datasets... etc)
+
+        :param disk: (DataDisk) disk object to get the data from.
+        :return:
+        """
         for disk_value in disk.disk_data_values.values():
             self._labels.add(disk_value.date)
             self._dataset_data.append(disk_value.size)
 
-        self._dataset = ChartJsDataset(disk.name, self._data_placeholder)
+        # build custom dataset label id for each disk
+        # format: "{disk_name} (mnt: {path})"
+        disk_chart_label = "{name} (mnt: {mount})".format(
+            name=disk.name,
+            mount=disk.mounted_path
+        )
+        self._dataset = ChartJsDataset(disk_chart_label, self._data_placeholder)
 
     @property
     def labels(self):
@@ -156,6 +168,7 @@ class ChartJsDataset(object):
 
     def _build_dataset(self):
 
+        # get the main index for all lists
         index = get_index()
 
         definition = {
@@ -170,17 +183,21 @@ class ChartJsDataset(object):
             'data': JsValue(self._data_placeholder, False),
         }
 
+        # increment +1 the main index value for all lists
         increment_index()
         return definition
 
     @property
     def label(self):
+        # type: () -> str
         return self._label
 
     @property
     def data_placeholder(self):
+        # type: () -> str
         return self._data_placeholder
 
     @property
     def definition(self):
+        # type: () -> dict
         return self._definition
