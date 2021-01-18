@@ -47,7 +47,7 @@ def line_disk_chart():
     disk_manager = get_disk_manager()
 
     if '/dev/sdc1' in disk_manager.disks.keys():
-        disk = disk_manager.disks['/dev/sdb1']
+        disk = disk_manager.disks['/dev/sdc1']
     else:
         disk = list(disk_manager.disks.values())[0]
 
@@ -72,7 +72,7 @@ def test():
     disk_manager = get_disk_manager()
 
     if '/dev/sdc1' in disk_manager.disks.keys():
-        disk = disk_manager.disks['/dev/sdb1']
+        disk = disk_manager.disks['/dev/sdc1']
     else:
         disk = list(disk_manager.disks.values())[0]
 
