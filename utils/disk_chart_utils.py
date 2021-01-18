@@ -19,20 +19,20 @@ LOGGER = logging.getLogger(__name__)
 
 BG_COLORS = [
     "rgba(151, 187, 205, 0.2)",     # Light Blue
-    "#EE8585",                      # Light Red
-    "#BB8FCE"                       # dark purple
+    "rgba(238, 133, 133, 0.2)",     # Light Red
+    "rgba(187, 143, 206, 0.2)",     # dark purple
 ]
 
 BORDER_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585",                      # Light Red
-    "#BB8FCE"  # dark purple
+    "rgba(238, 133, 133, 1)",       # Light Red
+    "rgba(187, 143, 206, 1)",       # dark purple
 ]
 
 POINT_BG_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585",                      # Light Red
-    "#BB8FCE"  # dark purple
+    "rgba(238, 133, 133, 1)",       # Light Red
+    "rgba(187, 143, 206, 1)",       # dark purple
 ]
 
 POINT_BORDER_COLORS = [
@@ -43,8 +43,8 @@ POINT_BORDER_COLORS = [
 
 POINT_HOVER_BG_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585",                      # Light Red
-    "#BB8FCE"  # dark purple
+    "rgba(238, 133, 133, 1)",       # Light Red
+    "rgba(187, 143, 206, 1)",       # dark purple
 ]
 
 POINT_HOVER_BORDER_COLORS = [
