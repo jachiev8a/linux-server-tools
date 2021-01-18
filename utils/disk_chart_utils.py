@@ -19,35 +19,57 @@ LOGGER = logging.getLogger(__name__)
 
 BG_COLORS = [
     "rgba(151, 187, 205, 0.2)",     # Light Blue
-    "#EE8585"                      # Light Red
+    "#EE8585",                      # Light Red
+    "#BB8FCE"                       # dark purple
 ]
 
 BORDER_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585"                      # Light Red
+    "#EE8585",                      # Light Red
+    "#BB8FCE"  # dark purple
 ]
 
 POINT_BG_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585"                      # Light Red
+    "#EE8585",                      # Light Red
+    "#BB8FCE"  # dark purple
 ]
 
 POINT_BORDER_COLORS = [
     "#fff",                         # Black
-    "#fff"                         # Black
+    "#fff",                         # Black
+    "#fff"  # Black
 ]
 
 POINT_HOVER_BG_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
-    "#EE8585"                      # Light Red
+    "#EE8585",                      # Light Red
+    "#BB8FCE"  # dark purple
 ]
 
 POINT_HOVER_BORDER_COLORS = [
     "#fff",                         # Black
-    "#fff"                         # Black
+    "#fff",                         # Black
+    "#fff"  # Black
 ]
 
 BORDER_WIDTH = 4
+MAIN_INDEX = 0
+MAX_INDEX = len(BG_COLORS)-1
+
+
+def increment_index():
+    global MAIN_INDEX
+    global MAX_INDEX
+    if MAIN_INDEX < MAX_INDEX:
+        MAIN_INDEX = MAIN_INDEX + 1
+    else:
+        MAIN_INDEX = 0
+
+
+def get_index():
+    global MAIN_INDEX
+    return MAIN_INDEX
 
 
 class DiskChartJsManager(object):
@@ -134,17 +156,21 @@ class ChartJsDataset(object):
 
     def _build_dataset(self):
 
+        index = get_index()
+
         definition = {
             'label': JsValue(self._label, True),
-            'backgroundColor': JsValue(BG_COLORS[0], True),
-            'borderColor': JsValue(BORDER_COLORS[0], True),
-            'pointBackgroundColor': JsValue(POINT_BG_COLORS[0], True),
-            'pointBorderColor': JsValue(POINT_BORDER_COLORS[0], True),
-            'pointHoverBackgroundColor': JsValue(POINT_HOVER_BG_COLORS[0], True),
-            'pointHoverBorderColor': JsValue(POINT_HOVER_BORDER_COLORS[0], True),
+            'backgroundColor': JsValue(BG_COLORS[index], True),
+            'borderColor': JsValue(BORDER_COLORS[index], True),
+            'pointBackgroundColor': JsValue(POINT_BG_COLORS[index], True),
+            'pointBorderColor': JsValue(POINT_BORDER_COLORS[index], True),
+            'pointHoverBackgroundColor': JsValue(POINT_HOVER_BG_COLORS[index], True),
+            'pointHoverBorderColor': JsValue(POINT_HOVER_BORDER_COLORS[index], True),
             'borderWidth': JsValue(BORDER_WIDTH, False),
             'data': JsValue(self._data_placeholder, False),
         }
+
+        increment_index()
         return definition
 
     @property
