@@ -11,6 +11,7 @@ from collections import OrderedDict
 
 # custom libs
 from utils.disk_data_manager import *
+from utils.js_utils import JsValue
 
 # main logger instance
 LOGGER = logging.getLogger(__name__)
@@ -120,15 +121,15 @@ class ChartJsDataset(object):
     def _build_dataset(self):
 
         definition = {
-            'label': self._label,
-            'backgroundColor': BG_COLORS[0],
-            'borderColor': BORDER_COLORS[0],
-            'pointBackgroundColor': POINT_BG_COLORS[0],
-            'pointBorderColor': POINT_BORDER_COLORS[0],
-            'pointHoverBackgroundColor': POINT_HOVER_BG_COLORS[0],
-            'pointHoverBorderColor': POINT_HOVER_BORDER_COLORS[0],
-            'borderWidth': BORDER_WIDTH,
-            'data': self._data_placeholder,
+            'label': JsValue(self._label, True),
+            'backgroundColor': JsValue(BG_COLORS[0], True),
+            'borderColor': JsValue(BORDER_COLORS[0], True),
+            'pointBackgroundColor': JsValue(POINT_BG_COLORS[0], True),
+            'pointBorderColor': JsValue(POINT_BORDER_COLORS[0], True),
+            'pointHoverBackgroundColor': JsValue(POINT_HOVER_BG_COLORS[0], True),
+            'pointHoverBorderColor': JsValue(POINT_HOVER_BORDER_COLORS[0], True),
+            'borderWidth': JsValue(BORDER_WIDTH, False),
+            'data': JsValue(self._data_placeholder, False),
         }
         return definition
 
