@@ -5,31 +5,6 @@ var diskUsageChart = document.getElementById("diskUsageChart");
 Chart.defaults.global.defaultFontFamily = "sans-serif";
 Chart.defaults.global.defaultFontSize = 15;
 
-// Disk Line Chart Data
-// --------------------------------------------------
-var diskLineChartData = {
-    /* external */
-    labels: lineLabelsData,
-    datasets: [
-        {
-            /* external */
-            label: lineDatasetName,
-            backgroundColor: "rgba(151, 187, 205, 0.2)",
-            borderColor: "rgba(151, 187, 205, 1)",
-
-            pointBackgroundColor: "rgba(151, 187, 205, 1)",
-            pointBorderColor: "#fff",
-
-            pointHoverBackgroundColor: "rgba(151, 187, 205, 1)",
-            pointHoverBorderColor: "#fff",
-
-            borderWidth: 4,
-            /* external */
-            data: lineDatasetData
-        }
-    ]
-};
-
 // Disk Line Chart Options
 // --------------------------------------------------
 var diskLineChartOptions = {
