@@ -86,12 +86,14 @@ class DiskChartJs(object):
     """"""
 
     def __init__(self, disk):
+        # type: (DataDisk) -> None
         """"""
         self._disk = disk
 
         self._labels = set()
         self._dataset_data = []
         self._dataset = None
+        self._data_placeholder = "data_placeholder{}".format(self._disk.uid)
 
         self._abstract_disk_data(disk)
 
@@ -101,7 +103,7 @@ class DiskChartJs(object):
             self._labels.add(disk_value.date)
             self._dataset_data.append(disk_value.size)
 
-        self._dataset = ChartJsDataset(disk.name, disk.uid)
+        self._dataset = ChartJsDataset(disk.name, self._data_placeholder)
 
     @property
     def labels(self):
@@ -116,15 +118,18 @@ class DiskChartJs(object):
     def dataset_data(self):
         return self._dataset_data
 
+    @property
+    def data_placeholder(self):
+        return self._data_placeholder
+
 
 class ChartJsDataset(object):
     """"""
 
-    def __init__(self, label_name, uid_data):
+    def __init__(self, label_name, data_placeholder_name):
         """"""
         self._label = label_name
-        self._uid_data = uid_data
-        self._data_placeholder = "data_placeholder{}".format(self._uid_data)
+        self._data_placeholder = data_placeholder_name
         self._definition = self._build_dataset()
 
     def _build_dataset(self):
