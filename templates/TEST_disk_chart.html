@@ -18,10 +18,9 @@
     <canvas id="diskLineChart" width="1300" height="620"></canvas>
 
     <script>
-    var maxYAxisValue       = 97.0
-    var lineChartSteps      = 11
+    var maxYAxisValue       = 97.0;
+    var lineChartSteps      = 11;
 
-    {#- First: go trough all charts to create the data containers -#}
     {% for disk_chart in chart_manager.disk_charts.values() -%}
         var {{ disk_chart.data_placeholder }} = [
             {% for data in disk_chart.dataset_data -%}
