@@ -133,7 +133,7 @@ class DiskChartJs(object):
 
         # build custom dataset label id for each disk
         # format: "{disk_name} (mnt: {path})"
-        disk_chart_label = "{name} (mnt: {mount})".format(
+        disk_chart_label = "{name} [{mount}]".format(
             name=disk.name,
             mount=disk.mounted_path
         )

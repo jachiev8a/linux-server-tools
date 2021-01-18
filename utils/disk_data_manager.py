@@ -112,6 +112,7 @@ class DataDisk(object):
         self._name = None
         self._total_size = None
         self._mounted_path = None
+        self._mount_id = None
         self._server = None
 
         # list of raw values retrieved from csv
@@ -138,6 +139,7 @@ class DataDisk(object):
 
         # CSV DATA: mounted path
         self._mounted_path = self._csv_raw_values[0][CSV_POSITION_MOUNTED_PATH]
+        self._mount_id = self._get_mount_id()
         LOGGER.debug("Mounted Path retrieved: '{}'".format(self._mounted_path))
 
         # CSV DATA: server data
@@ -168,6 +170,12 @@ class DataDisk(object):
         # Unique ID setup
         # it is the same as name, but with underscores: '_'
         self._uid = self._name.replace('/', '_')
+
+    def _get_mount_id(self):
+        # type: () -> str
+        if self._mounted_path == '/':
+            return 'root'
+        return self._mounted_path
 
     def get_last_disk_data_value(self):
         # type: () -> DataDisk.DiskDataValue
@@ -225,6 +233,10 @@ class DataDisk(object):
     @property
     def mounted_path(self):
         return self._mounted_path
+
+    @property
+    def mount_id(self):
+        return self._mount_id
 
     @property
     def server(self):
