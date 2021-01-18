@@ -329,7 +329,7 @@ class ServerDiskConfig(object):
     def _parse_configuration(self):
         # type: () -> dict
         for server in self._configuration['servers']:
-
+            pass
 
 
     @property
