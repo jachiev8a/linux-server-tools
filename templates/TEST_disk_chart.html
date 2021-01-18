@@ -18,37 +18,38 @@
     <canvas id="diskLineChart" width="1300" height="620"></canvas>
 
     <script>
+    var maxYAxisValue       = 97.0
+    var lineChartSteps      = 11
 
-        {# First: go trough all charts to create the data containers #}
+    {#- First: go trough all charts to create the data containers -#}
+    {% for disk_chart in chart_manager.disk_charts.values() -%}
+        var {{ disk_chart.data_placeholder }} = [
+            {% for data in disk_chart.dataset_data -%}
+                {{ data }},
+            {% endfor -%}
+        ];
+    {% endfor %}
 
-        {% for disk_chart in chart_manager.disk_charts.values() -%}
-            var {{ disk_chart.data_placeholder }} = [
-                {% for data in disk_chart.dataset_data -%}
-                    {{ data }},
+    var diskLineChartData = {
+        labels: [
+            {% for chart_label in chart_manager.chart_labels -%}
+                '{{ chart_label }}',
+            {% endfor -%}
+        ],
+        datasets: [
+            {% for disk_chart in chart_manager.disk_charts.values() -%}
+                {
+                {% for k, v in disk_chart.dataset.definition.items() -%}
+                    {%- if v.is_quoted -%}
+                        {{ k }}: '{{ v }}',
+                    {% else -%}
+                        {{ k }}: {{ v }},
+                    {% endif -%}
                 {% endfor -%}
-            ];
-        {% endfor %}
-
-        var diskLineChartData = {
-            labels: [
-                {% for chart_label in chart_manager.chart_labels -%}
-                    '{{ chart_label }}',
-                {% endfor -%}
-            ],
-            datasets: [
-                {% for disk_chart in chart_manager.disk_charts.values() -%}
-                    {
-                    {% for k, v in disk_chart.dataset.definition.items() -%}
-                        {%- if v.is_quoted -%}
-                            {{ k }}: '{{ v }}',
-                        {% else -%}
-                            {{ k }}: {{ v }},
-                        {% endif -%}
-                    {% endfor -%}
-                    },
-                {% endfor -%}
-            ]
-        }
+                },
+            {% endfor -%}
+        ]
+    }
     </script>
 
     <br/>
