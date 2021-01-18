@@ -57,11 +57,20 @@ class DiskChartJsManager(object):
         """"""
         self._disks = OrderedDict()
         self._disk_charts = OrderedDict()
+        self._chart_labels = set()
 
     def load_disk(self, disk):
         # type: (DataDisk) -> None
         self._disks[disk.name] = disk
-        self._disk_charts[disk.uid] = DiskChartJs(disk)
+
+        disk_chart_obj = DiskChartJs(disk)
+        self._disk_charts[disk.uid] = disk_chart_obj
+
+        self._chart_labels = disk_chart_obj.labels
+
+    @property
+    def chart_labels(self):
+        return self._chart_labels
 
     @property
     def disks(self):
@@ -80,7 +89,7 @@ class DiskChartJs(object):
         """"""
         self._disk = disk
 
-        self._labels = []
+        self._labels = set()
         self._dataset_data = []
         self._dataset = None
 
@@ -89,7 +98,7 @@ class DiskChartJs(object):
     def _abstract_disk_data(self, disk):
         # type: (DataDisk) -> None
         for disk_value in disk.disk_data_values.values():
-            self._labels.append(disk_value.date)
+            self._labels.add(disk_value.date)
             self._dataset_data.append(disk_value.size)
 
         self._dataset = ChartJsDataset(disk.name, disk.uid)
