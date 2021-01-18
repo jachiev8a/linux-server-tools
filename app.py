@@ -71,18 +71,15 @@ def test():
     # get disk manager singleton
     disk_manager = get_disk_manager()
 
-    if '/dev/sdb1' in disk_manager.disks.keys():
-        disk = disk_manager.disks['/dev/sdb1']
-    else:
-        disk = list(disk_manager.disks.values())[0]
-
     last_date_named_value = disk.get_last_disk_data_value().date
     last_disk_in_use_value = disk.get_last_disk_data_value().in_use
 
     disk_usage_label = "{} ({})".format(last_date_named_value, last_disk_in_use_value)
 
     disk_chart_manager = DiskChartJsManager()
-    disk_chart_manager.load_disk(disk)
+
+    for disk in disk_manager.disks.values():
+        disk_chart_manager.load_disk(disk)
 
     return render_template(
         'TEST_disk_chart.html',
