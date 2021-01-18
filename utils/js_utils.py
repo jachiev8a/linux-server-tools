@@ -24,6 +24,9 @@ class JsValue(object):
         self._value = value
         self._is_quoted = quoted_value
 
+    def __str__(self):
+        return self._value
+
     @property
     def value(self):
         # type: () -> str
