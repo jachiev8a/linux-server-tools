@@ -24,7 +24,7 @@
             {%- for k, v in disk.dataset.definition.items() -%}
                 {%- if v.is_quoted -%}
                     {{ k }}: '{{ v }}',
-                {% else %}
+                {%- else %}
                     {{ k }}: {{ v }},
                 {% endif %}
             {%- endfor -%}
