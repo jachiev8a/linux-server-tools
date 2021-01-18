@@ -71,11 +71,6 @@ def test():
     # get disk manager singleton
     disk_manager = get_disk_manager()
 
-    last_date_named_value = disk.get_last_disk_data_value().date
-    last_disk_in_use_value = disk.get_last_disk_data_value().in_use
-
-    disk_usage_label = "{} ({})".format(last_date_named_value, last_disk_in_use_value)
-
     disk_chart_manager = DiskChartJsManager()
 
     for disk in disk_manager.disks.values():
