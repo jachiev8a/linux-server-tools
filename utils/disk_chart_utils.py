@@ -135,7 +135,7 @@ class DiskChartJs(object):
         # format: "{disk_name} (mnt: {path})"
         disk_chart_label = "{name} [{mount}]".format(
             name=disk.name,
-            mount=disk.mounted_path
+            mount=disk.mount_id
         )
         self._dataset = ChartJsDataset(disk_chart_label, self._data_placeholder)
 
