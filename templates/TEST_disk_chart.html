@@ -25,28 +25,28 @@
             var = {{ disk_chart.data_placeholder }} = [
                 {% for data in disk_chart.dataset_data -%}
                     {{ data }},
-                {% endfor %}
+                {% endfor -%}
             ];
-        {% endfor %}
+        {%- endfor -%}
 
         var diskLineChartData = {
             labels: [
-            {% for chart_label in chart_manager.chart_labels -%}
-                '{{ chart_label }}',
-            {% endfor %}
+                {% for chart_label in chart_manager.chart_labels -%}
+                    '{{ chart_label }}',
+                {% endfor -%}
             ],
             datasets: [
-            {% for disk_chart in chart_manager.disk_charts.values() -%}
-                {
-                {% for k, v in disk_chart.dataset.definition.items() -%}
-                    {%- if v.is_quoted -%}
-                        {{ k }}: '{{ v }}',
-                    {% else -%}
-                        {{ k }}: {{ v }},
-                    {% endif %}
-                {% endfor %}
-                },
-            {% endfor %}
+                {% for disk_chart in chart_manager.disk_charts.values() -%}
+                    {
+                    {% for k, v in disk_chart.dataset.definition.items() -%}
+                        {%- if v.is_quoted -%}
+                            {{ k }}: '{{ v }}',
+                        {% else -%}
+                            {{ k }}: {{ v }},
+                        {% endif -%}
+                    {% endfor -%}
+                    },
+                {% endfor -%}
             ]
         }
     </script>
