@@ -18,7 +18,7 @@
     <canvas id="diskLineChart" width="1300" height="620"></canvas>
 
     <script>
-    var maxYAxisValue       = 97.0;
+    var maxYAxisValue       = {{ disk_manager.get_max_disk_size() }};
     var lineChartSteps      = 11;
 
     {% for disk_chart in chart_manager.disk_charts.values() -%}

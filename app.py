@@ -80,7 +80,8 @@ def test():
         'TEST_disk_chart.html',
         line_chart_title='Server Disk Usage (Daily)',
         disk_usage_title='Disk Usage (Current)',
-        chart_manager=disk_chart_manager
+        chart_manager=disk_chart_manager,
+        disk_manager=disk_manager
     )
 
 

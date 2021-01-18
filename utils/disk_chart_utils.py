@@ -112,7 +112,7 @@ class DiskChartJs(object):
         """"""
         self._disk = disk
 
-        self._labels = set()
+        self._labels = []
         self._dataset_data = []
         self._dataset = None
         self._data_placeholder = "data_placeholder{}".format(self._disk.uid)
@@ -128,7 +128,7 @@ class DiskChartJs(object):
         :return:
         """
         for disk_value in disk.disk_data_values.values():
-            self._labels.add(disk_value.date)
+            self._labels.append(disk_value.date)
             self._dataset_data.append(disk_value.size)
 
         # build custom dataset label id for each disk

@@ -7,6 +7,7 @@ import csv
 import logging
 import os
 import glob
+from typing import *
 from collections import OrderedDict
 
 # main logger instance
@@ -44,7 +45,7 @@ class DataDiskManager(object):
     def __init__(self, source_data_path):
         """"""
         self._source_data_path = source_data_path
-        self._disks = OrderedDict()
+        self._disks = OrderedDict()  # type: Dict[str, DataDisk]
         self._find_disks()
 
     def _find_disks(self):
@@ -66,9 +67,21 @@ class DataDiskManager(object):
             LOGGER.error(error_msg)
             raise Exception(error_msg)
 
+    def get_max_disk_size(self):
+        # type: () -> float
+        """Returns the max size value found from checking all loaded disks
+        into the disk manager object.
+
+        :return: the max sized disk value
+        """
+        max_values_list = []  # type: List[float]
+        for disk in self._disks.values():
+            max_values_list.append(disk.total_size)
+        return max(max_values_list)
+
     @property
     def disks(self):
-        # type: () -> OrderedDict
+        # type: () -> Dict[str, DataDisk]
         return self._disks
 
     @property
@@ -85,23 +98,27 @@ class DataDisk(object):
 
         def __init__(self, date, size_value, in_use_value):
             # type: (str, float, str) -> None
-            self._date = date
-            self._size = size_value
-            self._in_use = in_use_value
+            self._date = date  # type: str
+            self._size = size_value  # type: float
+            self._in_use = in_use_value  # type: str
 
         @property
         def date(self):
+            # type: () -> str
             return self._date
 
         @property
         def size(self):
+            # type: () -> float
             return self._size
 
         @property
         def in_use(self):
+            # type: () -> str
             return self._in_use
 
     def __init__(self, csv_file):
+        # type: (str) -> None
         """
         :param csv_file:
         """
@@ -110,7 +127,7 @@ class DataDisk(object):
         # static non-changeable values
         self._uid = None
         self._name = None
-        self._total_size = None
+        self._total_size = 0.0  # type: float
         self._mounted_path = None
         self._mount_id = None
         self._server = None
@@ -220,22 +237,27 @@ class DataDisk(object):
 
     @property
     def uid(self):
+        # type: () -> str
         return self._uid
 
     @property
     def name(self):
+        # type: () -> str
         return self._name
 
     @property
     def total_size(self):
+        # type: () -> float
         return self._total_size
 
     @property
     def mounted_path(self):
+        # type: () -> str
         return self._mounted_path
 
     @property
     def mount_id(self):
+        # type: () -> str
         return self._mount_id
 
     @property
@@ -245,7 +267,7 @@ class DataDisk(object):
 
     @property
     def disk_data_values(self):
-        # type: () -> dict[str, DataDisk.DiskDataValue]
+        # type: () -> Dict[str, DataDisk.DiskDataValue]
         return self._disk_data_values
 
 
