@@ -123,6 +123,11 @@ class DiskChartJsManager(object):
         return self._disk_line_chart_labels
 
     @property
+    def bar_chart_labels(self):
+        # type: () -> set
+        return self._disk_bar_chart_labels
+
+    @property
     def disks(self):
         return self._disks
 
@@ -251,7 +256,10 @@ class DiskBarChartJs(object):
         self._dataset_data = []
         self._dataset = None
         self._chart_index = index
-        self._data_placeholder = "bar_chart_data_placeholder{}".format(self._disk.uid)
+        self._data_placeholder = "bar_chart_data_placeholder{uid}__{idx}".format(
+            uid=self._disk.uid,
+            idx=self._chart_index
+        )
 
         self._abstract_disk_data(disk)
 
