@@ -6,6 +6,10 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
+.centered-text {
+  text-align: center;
+}
+
 /*
 * Override Bootstrap navbar-brand because the left mergin is 0.
 * this margin should be 16px for navbar.

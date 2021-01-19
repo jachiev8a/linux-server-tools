@@ -61,7 +61,7 @@ BORDER_WIDTH = 4
 # definition for bar chart for disk usage
 BAR_CHART_COLORS = [
     'rgba(38, 194, 129, 1)',        # Light Green (current)
-    'rgba(151, 187, 205, 1)',       # Light Blue (total)
+    'rgba(151, 187, 205, 0.2)',     # Light Blue (total)
 ]
 
 BAR_CHART_LABELS = [
@@ -111,7 +111,6 @@ class DiskChartJsManager(object):
             self._disk_bar_charts['total'] = disk_bar_chart_total
 
             self._disk_bar_chart_labels.add(disk_bar_chart_current.labels[0])
-            self._disk_bar_chart_labels.add(disk_bar_chart_total.labels[0])
 
         self._disk_line_chart_labels = disk_line_chart_obj.labels
 
