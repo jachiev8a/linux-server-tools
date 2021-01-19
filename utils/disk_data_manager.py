@@ -62,14 +62,46 @@ class DataDiskManager(object):
 
         glob_source_path = os.path.join(self._source_data_path, '*.csv')
         for source_file in glob.glob(glob_source_path):
+
             LOGGER.debug("Source Data File Found: '{}'".format(source_file))
             new_disk = DataDisk(source_file)
-            self._disks[new_disk.name] = new_disk
+
+            # validate if the server related to the disk data
+            # is found in the configuration file.
+            if self._is_server_found(new_disk):
+
+                # if the server is defined. Search for all defined disks in config.
+                # if the disk is found, the disk is loaded into the manager.
+                if self._is_disk_found(new_disk):
+                    self._disks[new_disk.name] = new_disk
+
+            else:
+                # server is not in config. All disks are loaded.
+                self._disks[new_disk.name] = new_disk
 
         if not bool(self.disks):
             error_msg = "Source Data Path does not have files in it: '{}'".format(self._source_data_path)
             LOGGER.error(error_msg)
             raise Exception(error_msg)
+
+    def _is_server_found(self, disk):
+        # type: (DataDisk) -> bool
+        """"""
+        # check if the server name matches the server defined in the config file
+        server_found = self._server_disk_config.get_server_by_name(disk.server.name)
+        if server_found is not None:
+            return True
+        return False
+
+    def _is_disk_found(self, disk):
+        # type: (DataDisk) -> bool
+        """"""
+        # check if the server name matches the server defined in the config file
+        if self._is_server_found(disk):
+            server_obj = self._server_disk_config.get_server_by_name(disk.server.name)
+            if disk.mount_id in server_obj.disk_names:
+                return True
+        return False
 
     def get_max_disk_size(self):
         # type: () -> float
@@ -192,15 +224,21 @@ class DataDisk(object):
         # it is the same as name, but with underscores: '_'
         self._uid = self._name.replace('/', '_')
 
+    def get_last_disk_data_value(self):
+        # type: () -> DataDisk.DiskDataValue
+        return list(self.disk_data_values.values())[-1]
+
+    def is_root_disk(self):
+        # type: () -> bool
+        if self._mount_id == 'root':
+            return True
+        return False
+
     def _get_mount_id(self):
         # type: () -> str
         if self._mounted_path == '/':
             return 'root'
         return self._mounted_path
-
-    def get_last_disk_data_value(self):
-        # type: () -> DataDisk.DiskDataValue
-        return list(self.disk_data_values.values())[-1]
 
     @staticmethod
     def _get_named_date_value(date_raw_value):
@@ -239,6 +277,10 @@ class DataDisk(object):
                     value_rows.append(row)
         return value_rows
 
+    def __str__(self):
+        # type: () -> str
+        return self._name
+
     @property
     def uid(self):
         # type: () -> str
@@ -262,6 +304,10 @@ class DataDisk(object):
     @property
     def mount_id(self):
         # type: () -> str
+        """Returns the id given to a mounted path of the disk partition.
+        If it is root partition, this id will return 'root' string.
+        If not, it will return the same path as 'mounted_path' attribute.
+        """
         return self._mount_id
 
     @property
@@ -299,9 +345,9 @@ class ServerDiskConfig(object):
         """"""
 
         def __init__(self, server_name, disks):
-            # type: (str, list) -> None
+            # type: (str, list[str]) -> None
             self._name = server_name  # type: str
-            self._disks = disks  # type: list
+            self._disk_names = disks  # type: list[str]
 
         @property
         def name(self):
@@ -310,12 +356,12 @@ class ServerDiskConfig(object):
 
         @property
         def disk_names(self):
-            # type: () -> str
-            return self._name
+            # type: () -> list[str]
+            return self._disk_names
 
     def __init__(self, config_file_path):
         """"""
-        self._servers = []
+        self._servers = {}  # type: Dict[str, ServerDiskConfig.ServerDiskObject]
         self._config_file_path = config_file_path
         self._configuration = self._read_config_file()
         self._parse_configuration()
@@ -326,16 +372,29 @@ class ServerDiskConfig(object):
             json_config = json.load(file_obj)
         return json_config
 
+    def server_exists(self, server_name):
+        # type: (str) -> bool
+        # for server in self._servers:
+        #     if server_name in server.name:
+        #         return True
+        # else:
+        #     return False
+        return bool([server for server in self._servers.values() if server.name == server_name])
+
+    def get_server_by_name(self, server_name):
+        # type: (str) -> ServerDiskConfig.ServerDiskObject
+        if self.server_exists(server_name):
+            return self._servers[server_name]
+
     def _parse_configuration(self):
-        # type: () -> dict
-        for server in self._configuration['servers']:
-            pass
-
-
-    @property
-    def name(self):
-        return self._name
+        # type: () -> None
+        for server_config in self._configuration['servers']:
+            server_name = server_config['name']
+            disk_list = server_config['disks']
+            new_server = ServerDiskConfig.ServerDiskObject(server_name, disk_list)
+            self._servers[new_server.name] = new_server
 
     @property
-    def ip(self):
-        return self._ip_address
+    def servers(self):
+        # type: () -> Dict[str, ServerDiskConfig.ServerDiskObject]
+        return self._servers
