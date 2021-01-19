@@ -51,6 +51,9 @@
     }
     </script>
 
+    <h5>{{ disk_usage_title }}</h5>
+    <canvas id="diskUsageChart" width="350" height="400"></canvas>
+
     <script>
     var maxDiskUsage        = {{ disk_manager.get_max_disk_size() }};
     var diskUsageSteps      = 6;
@@ -86,7 +89,6 @@
     </script>
 
     <br/>
-    <h5>{{ disk_usage_title }}</h5>
 
     <script src="{{url_for('static', filename='js/TEST_disk_chart.js')}}" ></script>
 
