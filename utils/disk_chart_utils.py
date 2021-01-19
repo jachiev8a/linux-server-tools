@@ -199,11 +199,12 @@ class ChartJsDatasetBaseClass(ABC):
         self._label = label_name
         self._index = index  # type: int
         self._data_placeholder = data_placeholder_name
-        self._definition = self._build_dataset()
+        self._definition = {}
+        self._build_dataset()
 
     @abstractmethod
     def _build_dataset(self):
-        # type: () -> Dict[str, Any]
+        # type: () -> None
         """"""
         raise NotImplementedError("Not Implemented!")
 
@@ -268,9 +269,9 @@ class ChartJsLineDataset(ChartJsDatasetBaseClass):
         super().__init__(label_name, data_placeholder_name, index)
 
     def _build_dataset(self):
-        # type: () -> Dict[str, Any]
+        # type: () -> None
         """"""
-        definition = {
+        self._definition = {
             'label': JsValue(self._label, True),
             'backgroundColor': JsValue(BG_COLORS[self._index], True),
             'borderColor': JsValue(BORDER_COLORS[self._index], True),
@@ -281,7 +282,6 @@ class ChartJsLineDataset(ChartJsDatasetBaseClass):
             'borderWidth': JsValue(BORDER_WIDTH, False),
             'data': JsValue(self._data_placeholder, False),
         }
-        return definition
 
 
 ####################################################################################################
@@ -348,12 +348,11 @@ class ChartJsBarDataset(ChartJsDatasetBaseClass):
         super().__init__(label_name, data_placeholder_name, index)
 
     def _build_dataset(self):
-        # type: () -> Dict[str, Any]
+        # type: () -> None
         """"""
-        definition = {
+        self._definition = {
             'label': JsValue(self._label, True),
             'backgroundColor': JsValue(BAR_CHART_COLORS[self._index], True),
             'borderColor': JsValue(BAR_CHART_COLORS[self._index], True),
             'data': JsValue(self._data_placeholder, False),
         }
-        return definition
