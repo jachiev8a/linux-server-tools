@@ -15,8 +15,7 @@
     {
       "name": "AZLXD-AGOSEN01",
       "disks": [
-        "root",
-        "/dev/sda1"
+        "root"
       ]
     }
   ]
