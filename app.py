@@ -24,16 +24,23 @@ LOGGER = logging.getLogger()
 # main Flask app call
 app = Flask(__name__)
 
-# main application instances
+# main application instances (singletons)
 DATA_DISK_MANAGER = None
+DATA_CHART_MANAGER = None
 
 
 def get_disk_manager():
     # type: () -> DataDiskManager
     global DATA_DISK_MANAGER
-    if DATA_DISK_MANAGER is None:
-        DATA_DISK_MANAGER = DataDiskManager('/os-monitor/output/', './disk-config.json')
+    DATA_DISK_MANAGER = DataDiskManager('/os-monitor/output/', './disk-config.json')
     return DATA_DISK_MANAGER
+
+
+def get_disk_chart_manager():
+    # type: () -> DiskChartJsManager
+    global DATA_CHART_MANAGER
+    DATA_CHART_MANAGER = DiskChartJsManager()
+    return DATA_CHART_MANAGER
 
 
 @app.route('/')
@@ -70,8 +77,8 @@ def line_disk_chart():
 def test():
     # get disk manager singleton
     disk_manager = get_disk_manager()
-
-    disk_chart_manager = DiskChartJsManager()
+    # get disk chart manager singleton
+    disk_chart_manager = get_disk_chart_manager()
 
     for disk in disk_manager.disks.values():
         disk_chart_manager.load_disk(disk)

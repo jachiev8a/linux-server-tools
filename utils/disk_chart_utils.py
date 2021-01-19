@@ -21,55 +21,45 @@ BG_COLORS = [
     "rgba(151, 187, 205, 0.3)",     # Light Blue
     "rgba(238, 133, 133, 0.3)",     # Light Red
     "rgba(187, 143, 206, 0.3)",     # dark purple
+    "rgba(255, 255, 128, 0.3)",     # yellow
 ]
 
 BORDER_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
     "rgba(238, 133, 133, 1)",       # Light Red
     "rgba(187, 143, 206, 1)",       # dark purple
+    "rgba(255, 255, 128, 1)",       # yellow
 ]
 
 POINT_BG_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
     "rgba(238, 133, 133, 1)",       # Light Red
     "rgba(187, 143, 206, 1)",       # dark purple
+    "rgba(255, 255, 128, 1)",       # yellow
 ]
 
 POINT_BORDER_COLORS = [
     "#fff",                         # Black
     "#fff",                         # Black
-    "#fff"  # Black
+    "#fff"                          # Black
+    "#fff",                         # Black
 ]
 
 POINT_HOVER_BG_COLORS = [
     "rgba(151, 187, 205, 1)",       # Light Blue
     "rgba(238, 133, 133, 1)",       # Light Red
     "rgba(187, 143, 206, 1)",       # dark purple
+    "rgba(255, 255, 128, 1)",       # yellow
 ]
 
 POINT_HOVER_BORDER_COLORS = [
     "#fff",                         # Black
     "#fff",                         # Black
-    "#fff"  # Black
+    "#fff",                         # Black
+    "#fff",                         # Black
 ]
 
 BORDER_WIDTH = 4
-MAIN_INDEX = 0
-MAX_INDEX = len(BG_COLORS)-1
-
-
-def increment_index():
-    global MAIN_INDEX
-    global MAX_INDEX
-    if MAIN_INDEX < MAX_INDEX:
-        MAIN_INDEX = MAIN_INDEX + 1
-    else:
-        MAIN_INDEX = 0
-
-
-def get_index():
-    global MAIN_INDEX
-    return MAIN_INDEX
 
 
 class DiskChartJsManager(object):
@@ -80,18 +70,20 @@ class DiskChartJsManager(object):
         self._disks = OrderedDict()
         self._disk_charts = OrderedDict()
         self._chart_labels = set()
+        self._load_index = 0
 
     def load_disk(self, disk):
         # type: (DataDisk) -> None
         self._disks[disk.name] = disk
 
-        disk_chart_obj = DiskChartJs(disk)
+        disk_chart_obj = DiskChartJs(disk, self._load_index)
         self._disk_charts[disk.uid] = disk_chart_obj
 
         self._chart_labels = disk_chart_obj.labels
 
     @property
     def chart_labels(self):
+        # type: () -> set
         return self._chart_labels
 
     @property
@@ -107,14 +99,15 @@ class DiskChartJsManager(object):
 class DiskChartJs(object):
     """"""
 
-    def __init__(self, disk):
-        # type: (DataDisk) -> None
+    def __init__(self, disk, index):
+        # type: (DataDisk, int) -> None
         """"""
         self._disk = disk
 
         self._labels = []
         self._dataset_data = []
         self._dataset = None
+        self._chart_index = index
         self._data_placeholder = "data_placeholder{}".format(self._disk.uid)
 
         self._abstract_disk_data(disk)
@@ -137,7 +130,11 @@ class DiskChartJs(object):
             name=disk.name,
             mount=disk.mount_id
         )
-        self._dataset = ChartJsDataset(disk_chart_label, self._data_placeholder)
+        self._dataset = ChartJsDataset(
+            disk_chart_label,
+            self._data_placeholder,
+            self._chart_index
+        )
 
     @property
     def labels(self):
@@ -160,31 +157,28 @@ class DiskChartJs(object):
 class ChartJsDataset(object):
     """"""
 
-    def __init__(self, label_name, data_placeholder_name):
+    def __init__(self, label_name, data_placeholder_name, index):
+        # type: (str, str, int) -> None
         """"""
         self._label = label_name
+        self._index = index  # type: int
         self._data_placeholder = data_placeholder_name
         self._definition = self._build_dataset()
 
     def _build_dataset(self):
-
-        # get the main index for all lists
-        index = get_index()
-
+        # type: () -> Dict[str, Any]
+        """"""
         definition = {
             'label': JsValue(self._label, True),
-            'backgroundColor': JsValue(BG_COLORS[index], True),
-            'borderColor': JsValue(BORDER_COLORS[index], True),
-            'pointBackgroundColor': JsValue(POINT_BG_COLORS[index], True),
-            'pointBorderColor': JsValue(POINT_BORDER_COLORS[index], True),
-            'pointHoverBackgroundColor': JsValue(POINT_HOVER_BG_COLORS[index], True),
-            'pointHoverBorderColor': JsValue(POINT_HOVER_BORDER_COLORS[index], True),
+            'backgroundColor': JsValue(BG_COLORS[self._index], True),
+            'borderColor': JsValue(BORDER_COLORS[self._index], True),
+            'pointBackgroundColor': JsValue(POINT_BG_COLORS[self._index], True),
+            'pointBorderColor': JsValue(POINT_BORDER_COLORS[self._index], True),
+            'pointHoverBackgroundColor': JsValue(POINT_HOVER_BG_COLORS[self._index], True),
+            'pointHoverBorderColor': JsValue(POINT_HOVER_BORDER_COLORS[self._index], True),
             'borderWidth': JsValue(BORDER_WIDTH, False),
             'data': JsValue(self._data_placeholder, False),
         }
-
-        # increment +1 the main index value for all lists
-        increment_index()
         return definition
 
     @property
@@ -199,5 +193,5 @@ class ChartJsDataset(object):
 
     @property
     def definition(self):
-        # type: () -> dict
+        # type: () -> Dict[str, Any]
         return self._definition
