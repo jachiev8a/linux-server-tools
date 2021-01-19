@@ -105,10 +105,11 @@ def download_file():
 
 @app.errorhandler(Exception)
 def server_error(err):
+    error_list = "{}".format(traceback.format_exc()).split()
     return render_template(
         'errors/error_500.html',
         error_msg=err,
-        trace=traceback.format_exc()
+        trace_list=error_list
     )
 
 
