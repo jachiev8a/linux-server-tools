@@ -47,10 +47,53 @@ var diskLineChartOptions = {
     }
 };
 
+// Disk Current Usage Chart Options
+// --------------------------------------------------
+var diskUsageChartOptions = {
+    responsive: false,
+    title: {
+        display: true,
+        text: 'Disk Usage Chart'
+    },
+    scales: {
+        xAxes: [{
+            display: true,
+            stacked: true,
+            scaleLabel: {
+                display: true,
+                labelString: 'Disk Size (GB)'
+            }
+        }],
+        yAxes: [{
+            display: true,
+            scaleLabel: {
+                display: true,
+                labelString: 'Total Disk Size (GB)'
+            },
+            ticks: {
+                min: 0,
+                /* external */
+                max: maxDiskUsage,
+                /* external */
+                stepSize: Math.ceil( maxDiskUsage / diskUsageSteps ),
+                steps: diskUsageSteps
+            }
+        }]
+    }
+};
+
 // Disk Line Chart Main Instance
 // --------------------------------------------------
 var lineChart = new Chart(diskLineChart, {
     type: 'line',
     data: diskLineChartData,
     options: diskLineChartOptions
+});
+
+// Disk Current Usage Chart Main Instance
+// --------------------------------------------------
+var usageChart = new Chart(diskUsageChart, {
+    type: 'bar',
+    data: diskUsageChartData,
+    options: diskUsageChartOptions
 });

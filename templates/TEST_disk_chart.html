@@ -21,7 +21,7 @@
     var maxYAxisValue       = {{ disk_manager.get_max_disk_size() }};
     var lineChartSteps      = 11;
 
-    {% for disk_chart in chart_manager.disk_charts.values() -%}
+    {% for disk_chart in chart_manager.disk_line_charts.values() -%}
         var {{ disk_chart.data_placeholder }} = [
             {% for data in disk_chart.dataset_data -%}
                 {{ data }},
@@ -31,12 +31,46 @@
 
     var diskLineChartData = {
         labels: [
-            {% for chart_label in chart_manager.chart_labels -%}
+            {% for chart_label in chart_manager.line_chart_labels -%}
                 '{{ chart_label }}',
             {% endfor -%}
         ],
         datasets: [
-            {% for disk_chart in chart_manager.disk_charts.values() -%}
+            {% for disk_chart in chart_manager.disk_line_charts.values() -%}
+                {
+                {% for k, v in disk_chart.dataset.definition.items() -%}
+                    {%- if v.is_quoted -%}
+                        {{ k }}: '{{ v }}',
+                    {% else -%}
+                        {{ k }}: {{ v }},
+                    {% endif -%}
+                {% endfor -%}
+                },
+            {% endfor -%}
+        ]
+    }
+    </script>
+
+    <script>
+    var maxDiskUsage        = {{ disk_manager.get_max_disk_size() }};
+    var diskUsageSteps      = 6;
+
+    {% for disk_bar_chart in chart_manager.disk_bar_charts.values() -%}
+        var {{ disk_bar_chart.data_placeholder }} = [
+            {% for data in disk_bar_chart.dataset_data -%}
+                {{ data }},
+            {% endfor -%}
+        ];
+    {% endfor %}
+
+    var diskUsageChartData = {
+        labels: [
+            {% for bar_chart_label in chart_manager.bar_chart_labels -%}
+                '{{ bar_chart_label }}',
+            {% endfor -%}
+        ],
+        datasets: [
+            {% for disk_chart in chart_manager.disk_bar_charts.values() -%}
                 {
                 {% for k, v in disk_chart.dataset.definition.items() -%}
                     {%- if v.is_quoted -%}
