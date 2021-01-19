@@ -3,10 +3,7 @@
 Module disk data manager
 """
 
-import csv
-import logging
-import os
-import glob
+from abc import ABC, abstractmethod
 from collections import OrderedDict
 
 # custom libs
@@ -62,17 +59,18 @@ POINT_HOVER_BORDER_COLORS = [
 BORDER_WIDTH = 4
 
 # definition for bar chart for disk usage
-BAR_CHART_COLORS = [
-    "rgba(38, 194, 129, 1)",        # Light Green (current)
-    "rgba(151, 187, 205, 1)",       # Light Blue (total)
-]
+BAR_CHART_COLORS = {
+    'current': 'rgba(38, 194, 129, 1)',     # Light Green (current)
+    'total': 'rgba(151, 187, 205, 1)',      # Light Blue (total)
+}
 
-BAR_CHART_LABELS = [
-    "Current",
-    "Total",
-]
+BAR_CHART_LABELS = {
+    'current': 'Current',
+    'total': 'Total',
+}
 
 
+####################################################################################################
 class DiskChartJsManager(object):
     """"""
 
@@ -106,8 +104,8 @@ class DiskChartJsManager(object):
         # into a ChartJs Bar object.
         # (There should only be 1 main chart created for this)
         if not bool(self._disk_bar_charts):
-            disk_bar_chart_current = DiskBarChartJs(disk, 0)
-            disk_bar_chart_total = DiskBarChartJs(disk, 1)
+            disk_bar_chart_current = DiskUsageChartJs(disk, 0)
+            disk_bar_chart_total = DiskUsageChartJs(disk, 1)
 
             self._disk_bar_charts['current'] = disk_bar_chart_current
             self._disk_bar_charts['total'] = disk_bar_chart_total
@@ -142,20 +140,97 @@ class DiskChartJsManager(object):
         return self._disk_bar_charts
 
 
-class DiskLineChartJs(object):
+####################################################################################################
+class DiskChartJsBaseClass(ABC):
     """"""
 
-    def __init__(self, disk, index):
-        # type: (DataDisk, int) -> None
+    def __init__(self, disk, index, chart_type):
+        # type: (DataDisk, int, str) -> None
         """"""
         self._disk = disk
+        self._chart_type = chart_type
 
         self._labels = []
         self._dataset_data = []
         self._dataset = None
         self._chart_index = index
-        self._data_placeholder = "line_chart_data_placeholder{}".format(self._disk.uid)
+        self._data_placeholder = "{chart_type}_data_placeholder{uid}__{idx}".format(
+            chart_type=self._chart_type,
+            uid=self._disk.uid,
+            idx=self._chart_index
+        )
 
+    @abstractmethod
+    def _abstract_disk_data(self, disk):
+        # type: (DataDisk) -> None
+        """Retrieve metadata from disk object (DataDisk) in order to build
+        the metadata for a Disk ChartJs Object (datasets... etc)
+
+        :param disk: (DataDisk) disk object to get the data from.
+        :return:
+        """
+        raise NotImplementedError("Not Implemented!")
+
+    @property
+    def labels(self):
+        # type: () -> list[str]
+        return self._labels
+
+    @property
+    def dataset(self):
+        # type: () -> ChartJsLineDataset
+        return self._dataset
+
+    @property
+    def dataset_data(self):
+        return self._dataset_data
+
+    @property
+    def data_placeholder(self):
+        return self._data_placeholder
+
+
+####################################################################################################
+class ChartJsDatasetBaseClass(ABC):
+    """"""
+    def __init__(self, label_name, data_placeholder_name, index):
+        # type: (str, str, int) -> None
+        """"""
+        self._label = label_name
+        self._index = index  # type: int
+        self._data_placeholder = data_placeholder_name
+        self._definition = self._build_dataset()
+
+    @abstractmethod
+    def _build_dataset(self):
+        # type: () -> Dict[str, Any]
+        """"""
+        raise NotImplementedError("Not Implemented!")
+
+    @property
+    def label(self):
+        # type: () -> str
+        return self._label
+
+    @property
+    def data_placeholder(self):
+        # type: () -> str
+        return self._data_placeholder
+
+    @property
+    def definition(self):
+        # type: () -> Dict[str, Any]
+        return self._definition
+
+
+####################################################################################################
+class DiskLineChartJs(DiskChartJsBaseClass):
+    """"""
+
+    def __init__(self, disk, index):
+        # type: (DataDisk, int) -> None
+        """"""
+        super().__init__(disk, index, 'line_chart')
         self._abstract_disk_data(disk)
 
     def _abstract_disk_data(self, disk):
@@ -182,35 +257,15 @@ class DiskLineChartJs(object):
             self._chart_index
         )
 
-    @property
-    def labels(self):
-        # type: () -> list[str]
-        return self._labels
 
-    @property
-    def dataset(self):
-        # type: () -> ChartJsLineDataset
-        return self._dataset
-
-    @property
-    def dataset_data(self):
-        return self._dataset_data
-
-    @property
-    def data_placeholder(self):
-        return self._data_placeholder
-
-
-class ChartJsLineDataset(object):
+####################################################################################################
+class ChartJsLineDataset(ChartJsDatasetBaseClass):
     """"""
 
     def __init__(self, label_name, data_placeholder_name, index):
         # type: (str, str, int) -> None
         """"""
-        self._label = label_name
-        self._index = index  # type: int
-        self._data_placeholder = data_placeholder_name
-        self._definition = self._build_dataset()
+        super().__init__(label_name, data_placeholder_name, index)
 
     def _build_dataset(self):
         # type: () -> Dict[str, Any]
@@ -228,38 +283,19 @@ class ChartJsLineDataset(object):
         }
         return definition
 
-    @property
-    def label(self):
-        # type: () -> str
-        return self._label
 
-    @property
-    def data_placeholder(self):
-        # type: () -> str
-        return self._data_placeholder
-
-    @property
-    def definition(self):
-        # type: () -> Dict[str, Any]
-        return self._definition
-
-
-class DiskBarChartJs(object):
+####################################################################################################
+class DiskUsageChartJs(DiskChartJsBaseClass):
     """"""
 
     def __init__(self, disk, index):
         # type: (DataDisk, int) -> None
         """"""
-        self._disk = disk
+        super().__init__(disk, index, 'bar_chart')
 
-        self._labels = []
-        self._dataset_data = []
-        self._dataset = None
-        self._chart_index = index
-        self._data_placeholder = "bar_chart_data_placeholder{uid}__{idx}".format(
-            uid=self._disk.uid,
-            idx=self._chart_index
-        )
+        self._role = 'total'
+        if self._chart_index == 0:
+            self._role = 'current'
 
         self._abstract_disk_data(disk)
 
@@ -271,58 +307,45 @@ class DiskBarChartJs(object):
         :param disk: (DataDisk) disk object to get the data from.
         :return:
         """
+        # set defaults for total
+        disk_usage_label = disk.total_size
+        dataset_data = disk.total_size
 
-        # get the metadata only from the last values from the disk object.
-        # 1. last date of the values retrieved
-        # 2. last in use value (% value)
-        # 3. last disk size measured. (in GB)
-        last_date_named_value = disk.get_last_disk_data_value().date
-        last_disk_in_use_value = disk.get_last_disk_data_value().in_use
-        last_disk_size_value = disk.get_last_disk_data_value().size
+        # current
+        if self._role == 'current':
+            # get the metadata only from the last values from the disk object.
+            # 1. last date of the values retrieved
+            # 2. last in use value (% value)
+            last_date_named_value = disk.get_last_disk_data_value().date
+            last_disk_in_use_value = disk.get_last_disk_data_value().in_use
 
-        # build the format of the label:
-        # {date} (%{in_use_value})
-        disk_usage_label = "{} ({})".format(
-            last_date_named_value, last_disk_in_use_value)
+            # 3. last disk size measured. (in GB)
+            dataset_data = disk.get_last_disk_data_value().size
 
+            # build the format of the label:
+            # {date} (%{in_use_value})
+            disk_usage_label = "{} ({})".format(
+                last_date_named_value, last_disk_in_use_value)
+
+        # set final computed values
         self._labels.append(disk_usage_label)
-        self._dataset_data.append(last_disk_size_value)
+        self._dataset_data.append(dataset_data)
 
         self._dataset = ChartJsBarDataset(
-            BAR_CHART_LABELS[self._chart_index],
+            BAR_CHART_LABELS[self._role],
             self._data_placeholder,
             self._chart_index
         )
 
-    @property
-    def labels(self):
-        # type: () -> list[str]
-        return self._labels
 
-    @property
-    def dataset(self):
-        # type: () -> ChartJsLineDataset
-        return self._dataset
-
-    @property
-    def dataset_data(self):
-        return self._dataset_data
-
-    @property
-    def data_placeholder(self):
-        return self._data_placeholder
-
-
-class ChartJsBarDataset(object):
+####################################################################################################
+class ChartJsBarDataset(ChartJsDatasetBaseClass):
     """"""
 
     def __init__(self, label_name, data_placeholder_name, index):
         # type: (str, str, int) -> None
         """"""
-        self._label = label_name
-        self._index = index  # type: int
-        self._data_placeholder = data_placeholder_name
-        self._definition = self._build_dataset()
+        super().__init__(label_name, data_placeholder_name, index)
 
     def _build_dataset(self):
         # type: () -> Dict[str, Any]
@@ -334,18 +357,3 @@ class ChartJsBarDataset(object):
             'data': JsValue(self._data_placeholder, False),
         }
         return definition
-
-    @property
-    def label(self):
-        # type: () -> str
-        return self._label
-
-    @property
-    def data_placeholder(self):
-        # type: () -> str
-        return self._data_placeholder
-
-    @property
-    def definition(self):
-        # type: () -> Dict[str, Any]
-        return self._definition
