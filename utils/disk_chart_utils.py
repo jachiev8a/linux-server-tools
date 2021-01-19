@@ -59,15 +59,15 @@ POINT_HOVER_BORDER_COLORS = [
 BORDER_WIDTH = 4
 
 # definition for bar chart for disk usage
-BAR_CHART_COLORS = {
-    'current': 'rgba(38, 194, 129, 1)',     # Light Green (current)
-    'total': 'rgba(151, 187, 205, 1)',      # Light Blue (total)
-}
+BAR_CHART_COLORS = [
+    'rgba(38, 194, 129, 1)',        # Light Green (current)
+    'rgba(151, 187, 205, 1)',       # Light Blue (total)
+]
 
-BAR_CHART_LABELS = {
-    'current': 'Current',
-    'total': 'Total',
-}
+BAR_CHART_LABELS = [
+    'Current',
+    'Total',
+]
 
 
 ####################################################################################################
@@ -160,6 +160,8 @@ class DiskChartJsBaseClass(ABC):
             idx=self._chart_index
         )
 
+        self._abstract_disk_data(disk)
+
     @abstractmethod
     def _abstract_disk_data(self, disk):
         # type: (DataDisk) -> None
@@ -232,7 +234,6 @@ class DiskLineChartJs(DiskChartJsBaseClass):
         # type: (DataDisk, int) -> None
         """"""
         super().__init__(disk, index, 'line_chart')
-        self._abstract_disk_data(disk)
 
     def _abstract_disk_data(self, disk):
         # type: (DataDisk) -> None
@@ -293,12 +294,6 @@ class DiskUsageChartJs(DiskChartJsBaseClass):
         """"""
         super().__init__(disk, index, 'bar_chart')
 
-        self._role = 'total'
-        if self._chart_index == 0:
-            self._role = 'current'
-
-        self._abstract_disk_data(disk)
-
     def _abstract_disk_data(self, disk):
         # type: (DataDisk) -> None
         """Retrieve metadata from disk object (DataDisk) in order to build
@@ -311,8 +306,8 @@ class DiskUsageChartJs(DiskChartJsBaseClass):
         disk_usage_label = disk.total_size
         dataset_data = disk.total_size
 
-        # current
-        if self._role == 'current':
+        # 0 = current
+        if self._chart_index == 0:
             # get the metadata only from the last values from the disk object.
             # 1. last date of the values retrieved
             # 2. last in use value (% value)
@@ -332,7 +327,7 @@ class DiskUsageChartJs(DiskChartJsBaseClass):
         self._dataset_data.append(dataset_data)
 
         self._dataset = ChartJsBarDataset(
-            BAR_CHART_LABELS[self._role],
+            BAR_CHART_LABELS[self._chart_index],
             self._data_placeholder,
             self._chart_index
         )
