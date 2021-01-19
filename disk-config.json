@@ -17,6 +17,12 @@
       "disks": [
         "root"
       ]
+    },
+    {
+      "name": "vm-euw-jira003",
+      "disks": [
+        "root"
+      ]
     }
   ]
 }
