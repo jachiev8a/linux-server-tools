@@ -87,6 +87,7 @@ class DiskChartJsManager(object):
 
         # Chart JS Bar charts for disk objects
         self._disk_bar_charts = OrderedDict()
+        self._disk_bar_chart_labels = set()
 
         self._load_index = 0
 
@@ -107,8 +108,12 @@ class DiskChartJsManager(object):
         if not bool(self._disk_bar_charts):
             disk_bar_chart_current = DiskBarChartJs(disk, 0)
             disk_bar_chart_total = DiskBarChartJs(disk, 1)
+
             self._disk_bar_charts['current'] = disk_bar_chart_current
             self._disk_bar_charts['total'] = disk_bar_chart_total
+
+            self._disk_bar_chart_labels.add(disk_bar_chart_current.labels[0])
+            self._disk_bar_chart_labels.add(disk_bar_chart_total.labels[0])
 
         self._disk_line_chart_labels = disk_line_chart_obj.labels
 
@@ -125,6 +130,11 @@ class DiskChartJsManager(object):
     def disk_line_charts(self):
         # type: () -> dict
         return self._disk_line_charts
+
+    @property
+    def disk_bar_charts(self):
+        # type: () -> dict
+        return self._disk_bar_charts
 
 
 class DiskLineChartJs(object):
@@ -169,6 +179,7 @@ class DiskLineChartJs(object):
 
     @property
     def labels(self):
+        # type: () -> list[str]
         return self._labels
 
     @property
@@ -277,6 +288,7 @@ class DiskBarChartJs(object):
 
     @property
     def labels(self):
+        # type: () -> list[str]
         return self._labels
 
     @property
