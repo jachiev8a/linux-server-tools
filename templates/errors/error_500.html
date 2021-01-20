@@ -11,16 +11,18 @@
   <h1 class="google-font">500</h1>
   <h2 class="google-font">Unexpected Error <b>:(</b></h2>
 
-  <div class="alert alert-danger w-50 p-3" role="alert">
-    Error: {{ error_msg }}
-  </div>
+  <div class="text-center">
+    <div class="alert alert-danger w-75 p-3" role="alert">
+      Error: {{ error_msg }}
+    </div>
 
-  <div class="alert alert-dark w-50" role="alert">
-    <pre>
-    {% for trace_line in trace_list -%}
-        {{ trace_line }}
-    {%+ endfor -%}
-    </pre>
+    <div class="alert alert-dark w-75" role="alert">
+      <pre>
+      {% for trace_line in trace_list -%}
+          {{ trace_line }}
+      {%+ endfor -%}
+      </pre>
+    </div>
   </div>
 
   <div class="gears">
