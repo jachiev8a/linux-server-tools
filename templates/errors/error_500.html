@@ -13,7 +13,7 @@
   <h2 class="google-font">Error: {{ error_msg }}</h2>
   <pre class="centered-text">
     {% for trace_line in trace_list -%}
-        "{{ trace_line }}"<br/>
+        {{ trace_line }}
     {% endfor -%}
   </pre>
   <
