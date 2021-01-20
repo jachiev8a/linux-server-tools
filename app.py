@@ -68,21 +68,7 @@ def line_disk_chart():
 
 @app.route('/test')
 def test():
-    # get disk manager singleton
-    disk_manager = get_disk_manager()
-    # get disk chart manager singleton
-    disk_chart_manager = get_disk_chart_manager()
-
-    for disk in disk_manager.disks.values():
-        disk_chart_manager.load_disk(disk)
-
-    return render_template(
-        'TEST_disk_chart.html',
-        line_chart_title='Server Disk Usage (Daily)',
-        disk_usage_title='Disk Usage (Current)',
-        chart_manager=disk_chart_manager,
-        disk_manager=disk_manager
-    )
+    pass
 
 
 @app.route('/download')
