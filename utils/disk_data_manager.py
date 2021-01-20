@@ -40,6 +40,7 @@ MONTHS = {
 }
 
 
+####################################################################################################
 class DataDiskManager(object):
     """"""
 
@@ -115,6 +116,18 @@ class DataDiskManager(object):
             max_values_list.append(disk.total_size)
         return max(max_values_list)
 
+    def get_server_name(self):
+        # type: () -> str
+        """Returns the server name related to all disks
+        """
+        return list(self._disks.values())[1].server.name
+
+    def get_server_ip(self):
+        # type: () -> str
+        """Returns the server name related to all disks
+        """
+        return list(self._disks.values())[1].server.ip
+
     @property
     def disks(self):
         # type: () -> Dict[str, DataDisk]
@@ -126,6 +139,7 @@ class DataDiskManager(object):
         return self._source_data_path
 
 
+####################################################################################################
 class DataDisk(object):
     """"""
 
@@ -321,6 +335,7 @@ class DataDisk(object):
         return self._disk_data_values
 
 
+####################################################################################################
 class Server(object):
     """"""
 
@@ -338,6 +353,7 @@ class Server(object):
         return self._ip_address
 
 
+####################################################################################################
 class ServerDiskConfig(object):
     """"""
 
@@ -374,11 +390,6 @@ class ServerDiskConfig(object):
 
     def server_exists(self, server_name):
         # type: (str) -> bool
-        # for server in self._servers:
-        #     if server_name in server.name:
-        #         return True
-        # else:
-        #     return False
         return bool([server for server in self._servers.values() if server.name == server_name])
 
     def get_server_by_name(self, server_name):

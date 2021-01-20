@@ -11,52 +11,91 @@
 {% block content %}
 <center>
     <br/>
-    <h3>{{ disk_obj.server.name }} - <b>[</b><span class="disk-ip">{{ disk_obj.server.ip }}</span><b>]</b></h3>
+    <h3>
+        {{ disk_manager.get_server_name }} -
+        <b>[</b>
+        <span class="disk-ip">
+            {{ disk_manager.get_server_ip }}
+        </span>
+        <b>]</b>
+    </h3>
     <br/>
-    <h5>{{ line_chart_title }}</h5>
 
+    <!-- (1) Disk Line Chart -->
+    <!------------------------------------------------------------------------------------->
+    <h5> Server Disk Usage (Daily) </h5>
     <canvas id="diskLineChart" width="1300" height="620"></canvas>
-
     <script>
-        var lineDatasetName     = "{{ disk_obj.name }}"
-        var maxYAxisValue       = {{ disk_obj.total_size }}
-        var lineChartSteps      = 11
-    </script>
+    var maxYAxisValue       = {{ disk_manager.get_max_disk_size() }};
+    var lineChartSteps      = 11;
 
-    <script>
-        var lineLabelsData =
-        [
-            {% for item in disk_obj.disk_data_values.values() %}
-                "{{ item.date }}",
-            {% endfor %}
+    {% for disk_chart in chart_manager.disk_line_charts.values() -%}
+        var {{ disk_chart.data_placeholder }} = [
+            {% for data in disk_chart.dataset_data -%}
+                {{ data }},
+            {% endfor -%}
+        ];
+    {% endfor %}
+
+    var diskLineChartData = {
+        labels: [
+            {% for chart_label in chart_manager.line_chart_labels -%}
+                '{{ chart_label }}',
+            {% endfor -%}
+        ],
+        datasets: [
+            {% for disk_chart in chart_manager.disk_line_charts.values() -%}
+                {
+                {% for k, v in disk_chart.dataset.definition.items() -%}
+                    {%- if v.is_quoted -%}
+                        {{ k }}: '{{ v }}',
+                    {% else -%}
+                        {{ k }}: {{ v }},
+                    {% endif -%}
+                {% endfor -%}
+                },
+            {% endfor -%}
         ]
+    }
     </script>
-
-    <script>
-        var lineDatasetData =
-        [
-            {% for item in disk_obj.disk_data_values.values() %}
-                {{ item.size }},
-            {% endfor %}
-        ]
-    </script>
-
     <br/>
-    <h5>{{ disk_usage_title }}</h5>
 
-    <canvas id="diskUsageChart" width="350" height="400"></canvas>
-
+    <!-- (2) Disk Usage Chart -->
+    <!------------------------------------------------------------------------------------->
+    <h5> Disk Usage (Current) </h5>
+    <canvas id="diskUsageChart" width="360" height="400"></canvas>
     <script>
-        var maxDiskUsage            = {{ disk_obj.total_size }}
-        var diskUsageSteps          = 6
-    </script>
+    var maxDiskUsage        = {{ disk_manager.get_max_disk_size() }};
+    var diskUsageSteps      = 6;
 
-    <script>
-        var diskUsageLabelsData = [ "{{ disk_usage_label }}" ]
-        var diskUsageDatasetData = [ {{ disk_usage_value }} ]
+    {% for disk_bar_chart in chart_manager.disk_bar_charts.values() -%}
+        var {{ disk_bar_chart.data_placeholder }} = [
+            {% for data in disk_bar_chart.dataset_data -%}
+                {{ data }},
+            {% endfor -%}
+        ];
+    {% endfor %}
 
-        var diskTotalLabelsData = [ "Total" ]
-        var diskTotalDatasetData = [ {{ disk_obj.total_size }} ]
+    var diskUsageChartData = {
+        labels: [
+            {% for bar_chart_label in chart_manager.bar_chart_labels -%}
+                '{{ bar_chart_label }}',
+            {% endfor -%}
+        ],
+        datasets: [
+            {% for disk_chart in chart_manager.disk_bar_charts.values() -%}
+                {
+                {% for k, v in disk_chart.dataset.definition.items() -%}
+                    {%- if v.is_quoted -%}
+                        {{ k }}: '{{ v }}',
+                    {% else -%}
+                        {{ k }}: {{ v }},
+                    {% endif -%}
+                {% endfor -%}
+                },
+            {% endfor -%}
+        ]
+    }
     </script>
 
     <script src="{{url_for('static', filename='js/disk_chart.js')}}" ></script>

@@ -5,31 +5,6 @@ var diskUsageChart = document.getElementById("diskUsageChart");
 Chart.defaults.global.defaultFontFamily = "sans-serif";
 Chart.defaults.global.defaultFontSize = 15;
 
-// Disk Line Chart Data
-// --------------------------------------------------
-var diskLineChartData = {
-    /* external */
-    labels: lineLabelsData,
-    datasets: [
-        {
-            /* external */
-            label: lineDatasetName,
-            backgroundColor: "rgba(151, 187, 205, 0.2)",
-            borderColor: "rgba(151, 187, 205, 1)",
-
-            pointBackgroundColor: "rgba(151, 187, 205, 1)",
-            pointBorderColor: "#fff",
-
-            pointHoverBackgroundColor: "rgba(151, 187, 205, 1)",
-            pointHoverBorderColor: "#fff",
-
-            borderWidth: 4,
-            /* external */
-            data: lineDatasetData
-        }
-    ]
-};
-
 // Disk Line Chart Options
 // --------------------------------------------------
 var diskLineChartOptions = {
@@ -72,38 +47,6 @@ var diskLineChartOptions = {
     }
 };
 
-// Disk Line Chart Main Instance
-// --------------------------------------------------
-var lineChart = new Chart(diskLineChart, {
-    type: 'line',
-    data: diskLineChartData,
-    options: diskLineChartOptions
-});
-
-// Disk Current Usage Chart Data
-// --------------------------------------------------
-var diskUsageChartData = {
-    labels: diskUsageLabelsData,
-    datasets: [
-        {
-            label: 'Current',
-
-            backgroundColor: "rgba(38, 194, 129, 1)",
-            borderColor: "rgba(38, 194, 129, 1)",
-
-            data: diskUsageDatasetData
-        },
-        {
-            label: 'Total',
-
-            backgroundColor: "rgba(151, 187, 205, 1)",
-            borderColor: "rgba(151, 187, 205, 1)",
-
-            data: diskTotalDatasetData
-        }
-    ]
-};
-
 // Disk Current Usage Chart Options
 // --------------------------------------------------
 var diskUsageChartOptions = {
@@ -138,6 +81,14 @@ var diskUsageChartOptions = {
         }]
     }
 };
+
+// Disk Line Chart Main Instance
+// --------------------------------------------------
+var lineChart = new Chart(diskLineChart, {
+    type: 'line',
+    data: diskLineChartData,
+    options: diskLineChartOptions
+});
 
 // Disk Current Usage Chart Main Instance
 // --------------------------------------------------
