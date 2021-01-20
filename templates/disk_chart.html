@@ -6,6 +6,9 @@
     <!-- Override the javascript code needed for charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
+    <!-- CSS: custom disk charts -->
+    <link rel="stylesheet" href="{{url_for('static', filename='css/disk_chart.css')}}">
+
 {% endblock %}
 
 {% block content %}
@@ -15,7 +18,7 @@
         {{ disk_manager.get_server_name() }} -
         <b>[</b><span class="disk-ip">{{ disk_manager.get_server_ip() -}}</span><b>]</b>
     </h3>
-    <hr size="5" width="400" align="center">
+    <hr class="server-separator">
 
     <!-- (1) Disk Line Chart -->
     <!------------------------------------------------------------------------------------->
