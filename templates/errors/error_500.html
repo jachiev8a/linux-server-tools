@@ -10,13 +10,19 @@
 <div class="loading">
   <h1 class="google-font">500</h1>
   <h2 class="google-font">Unexpected Error <b>:(</b></h2>
-  <h2 class="google-font">Error: {{ error_msg }}</h2>
-  <pre class="centered-text">
+
+  <div class="alert alert-danger" role="alert">
+    Error: {{ error_msg }}
+  </div>
+
+  <div class="alert alert-dark" role="alert">
+    <pre>
     {% for trace_line in trace_list -%}
         {{ trace_line }}
     {% endfor -%}
-  </pre>
-  <
+    </pre>
+  </div>
+
   <br/>
   <div class="gears">
     <div class="gear one">
