@@ -23,7 +23,11 @@ h2 {
   font-weight: 200;
   text-align: center;
 }
-h1, h2, .load-component {
+h1, h2, {
+  -webkit-transition: opacity 0.5s linear, margin-top 0.5s linear; /* Safari */
+  transition: opacity 0.5s linear, margin-top 0.5s linear;
+}
+.load-component {
   -webkit-transition: opacity 0.5s linear, margin-top 0.5s linear; /* Safari */
   transition: opacity 0.5s linear, margin-top 0.5s linear;
 }
