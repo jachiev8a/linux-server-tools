@@ -120,13 +120,13 @@ class DataDiskManager(object):
         # type: () -> str
         """Returns the server name related to all disks
         """
-        return list(self._disks.values())[1].server.name
+        return list(self._disks.values())[0].server.name
 
     def get_server_ip(self):
         # type: () -> str
         """Returns the server name related to all disks
         """
-        return list(self._disks.values())[1].server.ip
+        return list(self._disks.values())[0].server.ip
 
     @property
     def disks(self):
