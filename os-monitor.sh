@@ -20,6 +20,10 @@ TOOLS_ROOT_DIR="$SERVER_TOOLS_ROOT_DIR"
 OS_MONITOR_ROOT_DIR="$SERVER_TOOLS_OS_MONITOR_ROOT"
 OS_MONITOR_OUT_DIR="$SERVER_TOOLS_OS_MONITOR_OUTPUT"
 
+# local script variables:
+# --------------------------------------------------
+DAYS_TO_KEEP_FILES=8
+OUTPUT_FILES_TO_DELETE="$OS_MONITOR_OUT_DIR/*.txt"
 
 OS_MONITOR_MEM_CSV_FILE=$OS_MONITOR_OUT_DIR/_mem-info.csv
 
@@ -48,6 +52,9 @@ handle_error() {
     log_warning "\n > Exiting...\n"
     exit 1
 }
+
+# print banner
+print_header "$TOOL_NAME"
 
 # run script as root
 # ----------------------------------------------------------------------
@@ -212,7 +219,23 @@ do
 done
 log ""
 
-# change directory permissions
+# Clean older generated files (not CSV. Only the txt ones)
+# ----------------------------------------------------------------------
+log " > [$TOOL_NAME]: Removing older files (days old: $DAYS_TO_KEEP_FILES)..."
+log "------------------------------------------------------------"
+
+log_debug " > Files to be removed..."
+log_debug "------------------------------------------------------------"
+find "$OUTPUT_FILES_TO_DELETE" -type f -mtime +$DAYS_TO_KEEP_FILES
+log_debug "------------------------------------------------------------"
+
+# find all generated files in the output directory that surpasses the days defined.
+find "$OUTPUT_FILES_TO_DELETE" -type f -mtime +$DAYS_TO_KEEP_FILES -exec rm -f {} \;
+
+log_info " > [$TOOL_NAME]: Files successfully removed! [OK]"
+log ""
+
+# Change directory permissions
 # ----------------------------------------------------------------------
 log " > [$TOOL_NAME]: Changing Directory permissions to user '$TOOLS_USER'"
 log "------------------------------------------------------------"
@@ -222,5 +245,6 @@ chown -R "$TOOLS_USER":"$TOOLS_USER" "$TOOLS_ROOT_DIR"
 log ""
 log_info "==================================================================="
 log_info " > [$TOOL_NAME]: Successfully Executed! [OK]"
+log_info " > [ $(date) ]"
 log_info "==================================================================="
 log ""

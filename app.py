@@ -95,7 +95,7 @@ def server_error(err):
 @app.route('/test/error/500')
 def test_error_500():
     error_msg = "This is for testing only. No ERROR 500."
-    return render_template('error_500.html', error_msg=error_msg)
+    return render_template('errors/error_500.html', error_msg=error_msg)
 
 
 # ----------------------------------------------------------------------
