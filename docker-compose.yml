@@ -18,6 +18,11 @@ services:
             - ${OS_MONITOR_OUTPUT}:/os-monitor/output
             - ./logs:/app/logs
         # --------------------------------------------------
+        # docker-compose does not support 'deploy' keyword
+        # in regular 'up' 'down' controls. Reserved for SWARM.
+        # but calling docker-compose --compatibility make it work.
+        # https://github.com/docker/compose/pull/5684
+        # --------------------------------------------------
         deploy:
             resources:
                 limits:

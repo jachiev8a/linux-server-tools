@@ -71,7 +71,7 @@ export OS_MONITOR_OUTPUT="$OS_MONITOR_OUTPUT"
 log_debug " > [DOCKER]: Executing docker-compose Process...\n"
 
 echo -e " > [DOCKER]: Stop all running containers..."
-docker-compose -f docker-compose.yml down
+docker-compose --compatibility -f docker-compose.yml down
 log_info " > [DOCKER]: Containers Stopped [OK]\n"
 echo -e " ------------------------------------------------------------"
 
