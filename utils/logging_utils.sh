@@ -10,57 +10,57 @@ ANSI_LOG_WHITE="\e[97m"
 
 # log_fine
 # ----------------------------------------------------------------------
-log_fine() {
-    log_msg=$1
+function log_fine() {
+    local log_msg="$1"
     echo -e "$ANSI_LOG_CYAN$log_msg$ANSI_LOG_OFF"
 }
 
 # log_debug
 # ----------------------------------------------------------------------
-log_debug() {
-    log_msg=$1
+function log_debug() {
+    local log_msg="$1"
     echo -e "$ANSI_LOG_BLUE$log_msg$ANSI_LOG_OFF"
 }
 
 # log_info
 # ----------------------------------------------------------------------
-log_info() {
-    log_msg=$1
+function log_info() {
+    local log_msg="$1"
     echo -e "$ANSI_LOG_GREEN$log_msg$ANSI_LOG_OFF"
 }
 
 # log_warning
 # ----------------------------------------------------------------------
-log_warning() {
-    log_msg=$1
+function log_warning() {
+    local log_msg="$1"
     echo -e "$ANSI_LOG_YELLOW$log_msg$ANSI_LOG_OFF"
 }
 
 # log_error
 # ----------------------------------------------------------------------
-log_error() {
-    log_msg=$1
+function log_error() {
+    local log_msg="$1"
     echo -e "$ANSI_LOG_RED$log_msg$ANSI_LOG_OFF"
 }
 
 # log (normal)
 # ----------------------------------------------------------------------
-log_white() {
-    log_msg=$1
+function log_white() {
+    local log_msg="$1"
     echo -e "$ANSI_LOG_WHITE$log_msg$ANSI_LOG_WHITE"
 }
 
 # log (normal)
 # ----------------------------------------------------------------------
-log() {
-    log_msg=$1
+function log() {
+    local log_msg="$1"
     echo -e "$log_msg"
 }
 
 # banner / header
 # ----------------------------------------------------------------------
-print_header() {
-    tool_name=$1
+function print_header() {
+    local tool_name="$1"
     log_white " ==================================================================="
     log_white " |  [$tool_name]"
     log_white " ==================================================================="

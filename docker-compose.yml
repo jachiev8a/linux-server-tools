@@ -5,15 +5,27 @@ services:
         # use Dockerfile in this context repo
         build: .
         restart: always
+        # --------------------------------------------------
         environment:
             FLASK_APP: "app.py"
             FLASK_ENV: "development"
             FLASK_RUN_PORT: "5001"
+        # --------------------------------------------------
         ports:
             - "5001:5001"
+        # --------------------------------------------------
         volumes:
             - ${OS_MONITOR_OUTPUT}:/os-monitor/output
             - ./logs:/app/logs
+        # --------------------------------------------------
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.60'
+                    memory: 1G
+                reservations:
+                    cpus: '0.30'
+                    memory: 100M
 
 networks:
     default:
