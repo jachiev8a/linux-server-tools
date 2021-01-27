@@ -76,7 +76,7 @@ log_info " > [DOCKER]: Containers Stopped [OK]\n"
 echo -e " ------------------------------------------------------------"
 
 echo -e " > [DOCKER]: Starting containers..."
-docker-compose -f docker-compose.yml up --build -d
+docker-compose --compatibility -f docker-compose.yml up --build -d
 docker_exit_status=$?
 
 if [ $docker_exit_status -ne 0 ]; then
