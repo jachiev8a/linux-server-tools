@@ -12,4 +12,4 @@ COPY [".", "/app/"]
 
 # run server to be seen from outside
 # ----------------------------------------------------------------------
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["flask", "run"]
