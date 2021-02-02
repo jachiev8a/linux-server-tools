@@ -138,7 +138,7 @@ if [ "$CLEAN_OUTPUT" = true ]; then
     echo    # (optional) move to a new line
     log ""
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        log " > Removing contents from: '$OS_MONITOR_OUT_DIR/*'"
+        log " > Removing contents from: '${OS_MONITOR_OUT_DIR}/*'"
         # this syntax is for shellcheck: SC2115
         rm -rf "${OS_MONITOR_OUT_DIR:?}/"*
         log " > Removed! [OK]"
@@ -155,7 +155,7 @@ xTIME=$(date +"%H-%M-%S")
 xTIME_FMT=$(date +"%H:%M:%S")
 xDATE=$(date +"%m-%d-%Y")
 xDATE_SUMMARY=$(date +"%b-%d-%Y__%Z")
-DATE_FORMAT="$xDATE""__$xTIME""__$xDATE_SUMMARY"
+DATE_FORMAT="${xDATE}__${xTIME}__${xDATE_SUMMARY}"
 
 # Other meta data
 # ----------------------------------------------------------------------
@@ -168,18 +168,18 @@ THIS_HOSTNAME=$(hostname)
 log " > [$TOOL_NAME]: Getting Disk Space info..."
 log "------------------------------------------------------------"
 
-FILE_NAME_DISK="$TOOL_NAME""__disk__""$DATE_FORMAT.txt"
+FILE_NAME_DISK="${TOOL_NAME}__disk__${DATE_FORMAT}.txt"
 
-df -h | grep "^/dev/s" > "$OS_MONITOR_OUT_DIR"/"$FILE_NAME_DISK"
+df -h | grep "^/dev/s" > "${OS_MONITOR_OUT_DIR}/${FILE_NAME_DISK}"
 
 log_fine " > [$TOOL_NAME]: disk space info to file: '$FILE_NAME_DISK'..."
 log ""
 log " > [$TOOL_NAME]: Getting Memory info..."
 log "------------------------------------------------------------"
 
-FILE_NAME_MEM="$TOOL_NAME""__mem__""$DATE_FORMAT.txt"
+FILE_NAME_MEM="${TOOL_NAME}__mem__${DATE_FORMAT}.txt"
 
-free -ht > "$OS_MONITOR_OUT_DIR"/"$FILE_NAME_MEM"
+free -ht > "${OS_MONITOR_OUT_DIR}/${FILE_NAME_MEM}"
 
 log_fine " > [$TOOL_NAME]: memory info to file: '$FILE_NAME_MEM'..."
 log ""
@@ -191,7 +191,7 @@ log ""
 log " > [$TOOL_NAME]: Starting CSV Generation..."
 log "------------------------------------------------------------"
 
-cat "$OS_MONITOR_OUT_DIR"/"$FILE_NAME_DISK" | while read -r line
+cat "${OS_MONITOR_OUT_DIR}/${FILE_NAME_DISK}" | while read -r line
 do
     # go trough all drives found inside the disk file
     # ----------------------------------------------------------------------
@@ -199,12 +199,12 @@ do
     CURRENT_DRIVE_VALUES=$(echo "$line" | awk -F " " '{printf("%s,%s,%s,%s,%s,%s", $1,$2,$3,$4,$5,$6)}')
     DRIVE_ID=$(echo "$CURRENT_DRIVE" | awk -F "/" '{printf("%s-%s", $2, $3)}')
 
-    DRIVE_CSV_FILE_NAME="_$DRIVE_ID.csv"
+    DRIVE_CSV_FILE_NAME="_${DRIVE_ID}.csv"
     
     if [[ ! -f "$OS_MONITOR_OUT_DIR/$DRIVE_CSV_FILE_NAME" ]]; then
         # CSV file does not exists. generate it.
         echo " > [$TOOL_NAME]: Generating '$DRIVE_CSV_FILE_NAME'..."
-        echo $DISK_CSV_TITLES >> "$OS_MONITOR_OUT_DIR"/"$DRIVE_CSV_FILE_NAME"
+        echo $DISK_CSV_TITLES >> "${OS_MONITOR_OUT_DIR}/${DRIVE_CSV_FILE_NAME}"
     fi
 
     # ----------------------------------------------------------------------
@@ -215,7 +215,7 @@ do
 
     log " > Writing values to CSV file: '$DRIVE_CSV_FILE_NAME'"
     log ""
-    echo "$DRIVE_CSV_VALUES" >> "$OS_MONITOR_OUT_DIR"/"$DRIVE_CSV_FILE_NAME"
+    echo "$DRIVE_CSV_VALUES" >> "${OS_MONITOR_OUT_DIR}/${DRIVE_CSV_FILE_NAME}"
 done
 log ""
 
