@@ -1,5 +1,8 @@
 {% extends "_base_layout.html" %}
-{% block title %}Disk Usage Chart{% endblock %}
+{%- block title -%}
+    {{ super() }}
+    Disk Usage Chart
+{%- endblock -%}
 {% block head %}
     {{ super() }}
 
@@ -7,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
     <!-- CSS: custom disk charts -->
-    <link rel="stylesheet" href="{{url_for('static', filename='css/disk_chart.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/disk_chart.css')}}">
 
 {% endblock %}
 

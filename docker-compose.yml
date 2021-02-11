@@ -1,22 +1,29 @@
 version: "3.3"
 
 services:
+
+    # web server
     os-monitor-app:
-        # use Dockerfile in this context repo
-        build: .
+
+        container_name: os-monitor-app
+
+        build: ./app
+
         restart: always
+
+        # main command for gunicorn production deploy.
+        # change the port number of the app if needed.
+        command:
+            gunicorn os_monitor.wsgi --bind 0.0.0.0:5001
+
         # --------------------------------------------------
-        environment:
-            FLASK_APP: "app.py"
-            FLASK_ENV: "development"
-            FLASK_RUN_PORT: "5001"
-        # --------------------------------------------------
-        ports:
-            - "5001:5001"
+        expose:
+            - 5001
         # --------------------------------------------------
         volumes:
+            - ./app/os_monitor/static:/home/app/web/static
             - ${OS_MONITOR_OUTPUT}:/os-monitor/output
-            - ./logs:/app/logs
+            - ./logs:/home/app/web/logs
         # --------------------------------------------------
         # docker-compose does not support 'deploy' keyword
         # in regular 'up' 'down' controls. Reserved for SWARM.
@@ -31,6 +38,18 @@ services:
                 reservations:
                     cpus: '0.30'
                     memory: 100M
+
+    # reverse-proxy
+    nginx:
+        container_name: nginx
+        restart: always
+        build: ./nginx
+        ports:
+            - "8000:80"
+        depends_on:
+            - os-monitor-app
+        volumes:
+            - ./app/os_monitor/static:/home/app/web/static
 
 networks:
     default:

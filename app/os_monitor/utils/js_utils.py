@@ -3,14 +3,9 @@
 Module disk data manager
 """
 
-import csv
 import logging
-import os
-import glob
-from collections import OrderedDict
 
 # custom libs
-from utils.disk_data_manager import *
 
 # main logger instance
 LOGGER = logging.getLogger(__name__)

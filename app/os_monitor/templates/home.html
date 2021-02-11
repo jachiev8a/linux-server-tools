@@ -1,5 +1,8 @@
 {% extends "_base_layout.html" %}
-{% block title %}OS-Monitor Home{% endblock %}
+{%- block title -%}
+    {{ super() }}
+    Home
+{%- endblock -%}
 
 {% block content %}
     <div class="jumbotron p-5">

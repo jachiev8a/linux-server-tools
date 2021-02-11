@@ -5,24 +5,26 @@ Main script to manage swarm api with several utils
 """
 
 # core libs
-import argparse
 import traceback
+import os
 
 # flask libs
 from flask import Flask
 from flask import render_template
 from flask import send_file
+from flask import redirect
+from flask import url_for
+from flask import make_response
 
 # custom libs
-from utils.disk_data_manager import *
-from utils.disk_chart_utils import *
-from utils.logging_utils import setup_logger
+from os_monitor.utils.disk_data_manager import *
+from os_monitor.utils.disk_chart_utils import *
 
 # main logger instance
 LOGGER = logging.getLogger()
 
-# main Flask app call
-app = Flask(__name__)
+# main Flask server call
+server = Flask(__name__)
 
 # main application instances (singletons)
 DATA_DISK_MANAGER = None
@@ -32,7 +34,7 @@ DATA_CHART_MANAGER = None
 def get_disk_manager():
     # type: () -> DataDiskManager
     global DATA_DISK_MANAGER
-    DATA_DISK_MANAGER = DataDiskManager('/os-monitor/output/', './disk-config.json')
+    DATA_DISK_MANAGER = DataDiskManager('/os-monitor/output/', 'os_monitor/config/disk-config.json')
     return DATA_DISK_MANAGER
 
 
@@ -43,12 +45,18 @@ def get_disk_chart_manager():
     return DATA_CHART_MANAGER
 
 
-@app.route('/')
+@server.route('/')
 def index():
-    return render_template('index.html')
+    response = make_response(redirect(url_for('home')))
+    return response
 
 
-@app.route('/disk')
+@server.route('/os-monitor')
+def home():
+    return render_template('home.html')
+
+
+@server.route('/os-monitor/disk')
 def line_disk_chart():
 
     # get disk manager singleton
@@ -66,12 +74,12 @@ def line_disk_chart():
     )
 
 
-@app.route('/test')
+@server.route('/os-monitor/test')
 def test():
     pass
 
 
-@app.route('/download')
+@server.route('/os-monitor/download')
 def download_file():
     disk_manager = get_disk_manager()
     # retrieve disk data from CSV
@@ -82,7 +90,7 @@ def download_file():
     )
 
 
-@app.errorhandler(Exception)
+@server.errorhandler(Exception)
 def server_error(err):
     error_list = "{}".format(traceback.format_exc()).split('\n')
     return render_template(
@@ -92,33 +100,33 @@ def server_error(err):
     )
 
 
-@app.route('/test/error/500')
+@server.route('/test/error/500')
 def test_error_500():
     error_msg = "This is for testing only. No ERROR 500."
     return render_template('errors/error_500.html', error_msg=error_msg)
 
 
-# ----------------------------------------------------------------------
-# Main
-# ----------------------------------------------------------------------
-if __name__ == '__main__':
-
-    # Script Argument Parser
-    parser = argparse.ArgumentParser(description='[Flask] app.py')
-    parser.add_argument(
-        '-l', '--log-level',
-        default="info",
-        required=False,
-        help='debugging script log level '
-             '[ critical > error > warning > info > debug > off ]')
-    args = parser.parse_args()
-
-    # configure logging properties with configuration given
-    setup_logger(
-        logger_object=LOGGER,
-        log_level_console=args.log_level,
-        log_file_name=os.path.basename(__file__)
-    )
-
-    # flask app run
-    app.run()
+# # ----------------------------------------------------------------------
+# # Main
+# # ----------------------------------------------------------------------
+# if __name__ == '__main__':
+#
+#     # Script Argument Parser
+#     parser = argparse.ArgumentParser(description='[Flask] app.py')
+#     parser.add_argument(
+#         '-l', '--log-level',
+#         default="info",
+#         required=False,
+#         help='debugging script log level '
+#              '[ critical > error > warning > info > debug > off ]')
+#     args = parser.parse_args()
+#
+#     # configure logging properties with configuration given
+#     setup_logger(
+#         logger_object=LOGGER,
+#         log_level_console=args.log_level,
+#         log_file_name=os.path.basename(__file__)
+#     )
+#
+#     # flask server run
+#     server.run()
