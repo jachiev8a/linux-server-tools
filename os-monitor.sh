@@ -37,6 +37,7 @@ usage() {
     log_info "\n--- [$TOOL_NAME]: $SCRIPT_NAME.sh ---\n"
     log "Usage:\n"
     log ""
+    log " -c (cleans the output directory: '$OS_MONITOR_OUT_DIR')"
     exit 0
 }
 
