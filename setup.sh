@@ -212,6 +212,7 @@ if [ "$CRONTAB_EXISTS_ALREADY" -eq 0 ]; then
     log "------------------------------------------------------------"
 else
     log " > crontab already set. Nothing to do!"
+    log " > file: '$CRONTAB_USER_FILE'"
 fi
 
 log ""
