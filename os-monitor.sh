@@ -226,11 +226,11 @@ log "------------------------------------------------------------"
 
 log_debug " > Files to be removed..."
 log_debug "------------------------------------------------------------"
-find "${OUTPUT_FILES_TO_DELETE}" -type f -mtime +$DAYS_TO_KEEP_FILES
+find "$OUTPUT_FILES_TO_DELETE" -type f -mtime +$DAYS_TO_KEEP_FILES
 log_debug "------------------------------------------------------------"
 
 # find all generated files in the output directory that surpasses the days defined.
-find "${OUTPUT_FILES_TO_DELETE}" -type f -mtime +$DAYS_TO_KEEP_FILES -exec rm -f {} \;
+find "$OUTPUT_FILES_TO_DELETE" -type f -mtime +$DAYS_TO_KEEP_FILES -exec rm -f {} \;
 
 log_info " > [$TOOL_NAME]: Files successfully removed! [OK]"
 log ""
