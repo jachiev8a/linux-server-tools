@@ -12,6 +12,8 @@ source ./bin/setenv.sh
 # Default dir used as repo path to deploy
 OS_MONITOR_OUTPUT="$SERVER_TOOLS_OS_MONITOR_OUTPUT"
 
+UNDETACH=false
+
 # usage help use
 # ----------------------------------------------------------------------
 usage() {
@@ -35,8 +37,9 @@ handle_error() {
 
 # validate arguments parsing
 # ----------------------------------------------------------------------
-while getopts "h" option; do
+while getopts "hu" option; do
     case "$option" in
+        u) UNDETACH=true ;;
         h) usage ;;
         *) usage ;;
     esac
@@ -76,7 +79,14 @@ log_info " > [DOCKER]: Containers Stopped [OK]\n"
 echo -e " ------------------------------------------------------------"
 
 echo -e " > [DOCKER]: Starting containers..."
-docker-compose --compatibility -f docker-compose.yml up --build -d
+
+if [ "$UNDETACH" = true ]; then
+    log_white " > docker container undetached!"
+    log_white " ------------------------------------------------------------"
+    docker-compose --compatibility -f docker-compose.yml up --build
+else
+    docker-compose --compatibility -f docker-compose.yml up --build -d
+fi
 docker_exit_status=$?
 
 if [ $docker_exit_status -ne 0 ]; then

@@ -3,12 +3,14 @@
 Module disk data manager
 """
 
-from abc import ABC, abstractmethod
+import logging
+from typing import *
 from collections import OrderedDict
+from abc import ABC, abstractmethod
 
 # custom libs
-from utils.disk_data_manager import *
-from utils.js_utils import JsValue
+from os_monitor.utils.js_utils import JsValue
+from os_monitor.utils.disk_data_manager import DataDisk
 
 # main logger instance
 LOGGER = logging.getLogger(__name__)
