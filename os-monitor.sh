@@ -160,7 +160,7 @@ DATE_FORMAT="${xDATE}__${xTIME}__${xDATE_SUMMARY}"
 
 # Other meta data
 # ----------------------------------------------------------------------
-THIS_IP=$(ip -br addr show | grep eth0 | awk -F " " '{printf( "%s\n", $3)}' | awk -F "/" '{printf( "%s", $1 )}')
+THIS_IP=$(ip -br addr show | grep "^eth0" | awk -F " " '{printf( "%s\n", $3)}' | awk -F "/" '{printf( "%s", $1 )}')
 THIS_HOSTNAME=$(hostname)
 
 # get os metadata
@@ -171,6 +171,7 @@ log "------------------------------------------------------------"
 
 FILE_NAME_DISK="${TOOL_NAME}__disk__${DATE_FORMAT}.txt"
 
+# df command to get disk data
 df -h | grep "^/dev/s" > "${OS_MONITOR_OUT_DIR}/${FILE_NAME_DISK}"
 
 log_fine " > [$TOOL_NAME]: disk space info to file: '$FILE_NAME_DISK'..."
@@ -196,9 +197,18 @@ cat "${OS_MONITOR_OUT_DIR}/${FILE_NAME_DISK}" | while read -r line
 do
     # go trough all drives found inside the disk file
     # ----------------------------------------------------------------------
-    CURRENT_DRIVE=$(echo "$line" | awk -F " " '{printf("%s", $1)}')
     CURRENT_DRIVE_VALUES=$(echo "$line" | awk -F " " '{printf("%s,%s,%s,%s,%s,%s", $1,$2,$3,$4,$5,$6)}')
-    DRIVE_ID=$(echo "$CURRENT_DRIVE" | awk -F "/" '{printf("%s-%s", $2, $3)}')
+
+    # validate mounted value to be used as the ID
+    MOUNTED_ON_VALUE=$(echo "$line" | awk -F " " '{printf("%s", $6)}')
+
+    if [ "$MOUNTED_ON_VALUE" == "/" ]; then
+        # mounted in 'root' (the most important partition)
+        DRIVE_ID="root"
+    else
+        # divide mounted drive name into pieces
+        DRIVE_ID=$(echo "$MOUNTED_ON_VALUE" | awk -F "/" '{printf("%s-%s", $2, $3)}')
+    fi
 
     DRIVE_CSV_FILE_NAME="_${DRIVE_ID}.csv"
     
