@@ -255,7 +255,9 @@ class DataDisk(object):
         if self._mounted_path == '/':
             mount_id = MOUNT_ID_ROOT
         else:
-            mount_id = self._mounted_path.replace('/', '-')[1:]
+            mount_id = self._mounted_path.replace('/', '_')
+            if mount_id.startswith('_'):
+                mount_id = mount_id[1:]
         return mount_id
 
     @staticmethod
