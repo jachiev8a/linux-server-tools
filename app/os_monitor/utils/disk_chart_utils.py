@@ -95,7 +95,7 @@ class DiskChartJsManager(object):
         # type: (DataDisk) -> None
         """"""
         # load raw disk object in container
-        self._disks[disk.filesystem_name] = disk
+        self._disks[disk.uid] = disk
 
         # create an abstraction object for the disk data.
         # into a ChartJs Line object.
