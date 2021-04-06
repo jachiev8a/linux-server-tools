@@ -95,7 +95,7 @@ class DiskChartJsManager(object):
         # type: (DataDisk) -> None
         """"""
         # load raw disk object in container
-        self._disks[disk.name] = disk
+        self._disks[disk.filesystem_name] = disk
 
         # create an abstraction object for the disk data.
         # into a ChartJs Line object.
@@ -251,8 +251,8 @@ class DiskLineChartJs(DiskChartJsBaseClass):
         # build custom dataset label id for each disk
         # format: "{disk_name} [{path}]"
         disk_chart_label = "{name} [{mount}]".format(
-            name=disk.name,
-            mount=disk.mount_id
+            name=disk.uid,
+            mount=disk.filesystem_name
         )
         self._dataset = ChartJsLineDataset(
             disk_chart_label,

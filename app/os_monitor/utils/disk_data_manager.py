@@ -14,7 +14,7 @@ from collections import OrderedDict
 # main logger instance
 LOGGER = logging.getLogger(__name__)
 
-CSV_POSITION_DRIVE_NAME = 0
+CSV_POSITION_FILESYSTEM_NAME = 0
 CSV_POSITION_TOTAL_SIZE = 1
 CSV_POSITION_CURRENT_SIZE = 2
 CSV_POSITION_IN_USE_SIZE = 4
@@ -23,6 +23,8 @@ CSV_POSITION_DATE = 6
 CSV_POSITION_TIME = 7
 CSV_POSITION_SERVER_NAME = 8
 CSV_POSITION_SERVER_IP = 9
+
+MOUNT_ID_ROOT = 'root'
 
 MONTHS = {
     '01': 'JAN',
@@ -74,11 +76,11 @@ class DataDiskManager(object):
                 # if the server is defined. Search for all defined disks in config.
                 # if the disk is found, the disk is loaded into the manager.
                 if self._is_disk_found(new_disk):
-                    self._disks[new_disk.name] = new_disk
+                    self._disks[new_disk.uid] = new_disk
 
             else:
                 # server is not in config. All disks are loaded.
-                self._disks[new_disk.name] = new_disk
+                self._disks[new_disk.uid] = new_disk
 
         if not bool(self.disks):
             error_msg = "Source Data Path does not have files in it: '{}'".format(self._source_data_path)
@@ -176,7 +178,7 @@ class DataDisk(object):
 
         # static non-changeable values
         self._uid = None
-        self._name = None
+        self._filesystem_name = None
         self._total_size = 0.0  # type: float
         self._mounted_path = None
         self._mount_id = None
@@ -191,13 +193,13 @@ class DataDisk(object):
         self._csv_raw_values = self.__parse_csv_content()
         self._build_disk_from_content()
 
-        LOGGER.debug("Data Disk Loaded! '{}'".format(self._name))
+        LOGGER.debug("Data Disk Loaded! '{}'".format(self._filesystem_name))
 
     def _build_disk_from_content(self):
 
-        # CSV DATA: drive name
-        self._name = self._csv_raw_values[0][CSV_POSITION_DRIVE_NAME]
-        LOGGER.debug("Drive name retrieved: '{}'".format(self._name))
+        # CSV DATA: filesystem name
+        self._filesystem_name = self._csv_raw_values[0][CSV_POSITION_FILESYSTEM_NAME]
+        LOGGER.debug("Drive name retrieved: '{}'".format(self._filesystem_name))
 
         # CSV DATA: total size
         csv_value = self._csv_raw_values[0][CSV_POSITION_TOTAL_SIZE]
@@ -236,7 +238,7 @@ class DataDisk(object):
 
         # Unique ID setup
         # it is the same as name, but with underscores: '_'
-        self._uid = self._name.replace('/', '_')
+        self._uid = self._mount_id
 
     def get_last_disk_data_value(self):
         # type: () -> DataDisk.DiskDataValue
@@ -244,15 +246,17 @@ class DataDisk(object):
 
     def is_root_disk(self):
         # type: () -> bool
-        if self._mount_id == 'root':
+        if self._mount_id == MOUNT_ID_ROOT:
             return True
         return False
 
     def _get_mount_id(self):
         # type: () -> str
         if self._mounted_path == '/':
-            return 'root'
-        return self._mounted_path
+            mount_id = MOUNT_ID_ROOT
+        else:
+            mount_id = self._mounted_path.replace('/', '-')[1:]
+        return mount_id
 
     @staticmethod
     def _get_named_date_value(date_raw_value):
@@ -293,7 +297,7 @@ class DataDisk(object):
 
     def __str__(self):
         # type: () -> str
-        return self._name
+        return self._filesystem_name
 
     @property
     def uid(self):
@@ -301,9 +305,9 @@ class DataDisk(object):
         return self._uid
 
     @property
-    def name(self):
+    def filesystem_name(self):
         # type: () -> str
-        return self._name
+        return self._filesystem_name
 
     @property
     def total_size(self):
