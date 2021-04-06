@@ -102,7 +102,11 @@ class DataDiskManager(object):
         # check if the server name matches the server defined in the config file
         if self._is_server_found(disk):
             server_obj = self._server_disk_config.get_server_by_name(disk.server.name)
+            # find by disk mount id (like 'root')
             if disk.mount_id in server_obj.disk_names:
+                return True
+            # find by mounted path (like '/mnt/share')
+            if disk.mounted_path in server_obj.disk_names:
                 return True
         return False
 
