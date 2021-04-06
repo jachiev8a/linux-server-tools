@@ -3,7 +3,8 @@
     {
       "name": "SVAZ-JENK001",
       "disks": [
-        "root"
+        "root",
+        "/mnt/share"
       ]
     },
     {

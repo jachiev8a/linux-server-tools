@@ -104,6 +104,8 @@ class DataDiskManager(object):
             server_obj = self._server_disk_config.get_server_by_name(disk.server.name)
             if disk.mount_id in server_obj.disk_names:
                 return True
+            if disk.mounted_path in server_obj.disk_names:
+                return True
         return False
 
     def get_max_disk_size(self):
