@@ -100,6 +100,10 @@ class DiskChartJsManager(object):
         # create an abstraction object for the disk data.
         # into a ChartJs Line object.
         disk_line_chart_obj = DiskLineChartJs(disk, self._load_index)
+
+        # upgrade load index
+        self._load_index += 1
+
         self._disk_line_charts[disk.uid] = disk_line_chart_obj
 
         # create an abstraction object for the disk data.
@@ -155,7 +159,7 @@ class DiskChartJsBaseClass(ABC):
         self._dataset_data = []
         self._dataset = None
         self._chart_index = index
-        self._data_placeholder = "{chart_type}_data_placeholder{uid}__{idx}".format(
+        self._data_placeholder = "{chart_type}_data_placeholder_{uid}__{idx}".format(
             chart_type=self._chart_type,
             uid=self._disk.uid,
             idx=self._chart_index
