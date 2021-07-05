@@ -15,21 +15,16 @@ specific tools and utils for linux servers
 
     cd /var/lib/server-tools/
     ```
-- clone the git project (let it create the directory):
-
-    ```
-    git clone git@git-test-oc.osramcontinental.net:eex/linux-server-tools.git
-    ```
 - Setup crontab line:
 
     ```
-    # linux-server-tools (os-monitor) - contact: javier.ochoa
+    # linux-server-tools (os-monitor) - contact: abc
     0 23 * * * /data/git/linux-server-tools/os-monitor.sh
     ```
 
 ## Common Crontab
 ---
 ```
-# linux-server-tools (os-monitor) - contact: javier.ochoa
+# linux-server-tools (os-monitor) - contact: abc
 0 23 * * * /var/lib/server-tools/linux-server-tools/os-monitor.sh
 ```
